@@ -105,27 +105,27 @@ h1 {
     to { transform: translateY(-8px); }
 }
 
+/* Trending Instagram-style Glowing Neon Animated Photo Frame */
 .photo-wrap {
     max-width: 340px;
     margin: 22px auto;
-    padding: 8px;
-    border-radius: 28px;
-    background: linear-gradient(135deg, #ffb8da, #c9b9ff, #ffe2bc);
-    box-shadow: 0 14px 35px #a56d9a30;
-    animation: photoPulse 4s infinite ease-in-out;
+    padding: 10px;
+    border-radius: 32px;
+    background: linear-gradient(60deg, #ffb8da, #c9b9ff, #ffe2bc, #ff9ebb, #b19eff);
+    background-size: 300% 300%;
+    box-shadow: 0 0 25px rgba(223, 128, 181, 0.6), 0 0 50px rgba(162, 138, 229, 0.4);
+    animation: instaFrameGlow 6s ease infinite, floatPhoto 3s ease-in-out infinite alternate;
 }
 
-@keyframes photoPulse {
-    0% {
-        box-shadow: 0 14px 35px rgba(165, 109, 154, 0.2);
-    }
-    50% {
-        box-shadow: 0 14px 45px rgba(255, 184, 218, 0.7);
-        transform: scale(1.02);
-    }
-    100% {
-        box-shadow: 0 14px 35px rgba(165, 109, 154, 0.2);
-    }
+@keyframes instaFrameGlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes floatPhoto {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(-6px); }
 }
 
 .portrait, .cake-portrait {
@@ -133,7 +133,7 @@ h1 {
     width: 100%;
     max-height: 430px;
     object-fit: cover;
-    border-radius: 22px;
+    border-radius: 24px;
 }
 
 .cake-wrap {
@@ -257,23 +257,24 @@ button:hover { transform: translateY(-3px) scale(1.02); }
 <body>
 <div class="page">
 
-    <div class="decor">✧ ♡ ✧</div>
-    <div class="pill">A LITTLE SURPRISE FOR YOU</div>
+    <div class="decor">✧ 21 ✧</div>
+    <div class="pill">ENTERING A FABULOUS NEW CHAPTER</div>
 
-    <h1>Hey, Muskan! 💗</h1>
+    <h1>Happy 21st, Muskan! 💗</h1>
     <p class="subtitle">
-        Someone has made a little corner of the internet
-        just to celebrate YOU. 🌷
+        Stepping into 21 with grace, beauty, and magic. ✨<br>
+        Here is a little corner of the internet made just to celebrate YOU. 🌷
     </p>
 
+    <!-- Trending Animated Neon Instagram Photo Frame -->
     <div class="photo-wrap">PHOTO_SECTION</div>
 
     <div class="card" id="intro">
         <div style="font-size:48px">🎁</div>
-        <h2>Ready for your surprise?</h2>
+        <h2>Ready for your 21st surprise?</h2>
         <p class="message">
-            There's a little birthday magic waiting for you.<br>
-            This moment is all yours. 💌
+            Your special milestone moment is waiting.<br>
+            Let's make this birthday unforgettable! 💌
         </p>
         <button onclick="openSurprise()">Open Your Surprise ✨</button>
     </div>
@@ -282,32 +283,25 @@ button:hover { transform: translateY(-3px) scale(1.02); }
         <div class="decor">🎈 ✨ 🎈</div>
 
         <div class="card">
-            <h2>Happy Birthday, Muskan! 🎂</h2>
+            <h2>Cheers to 21 Years, Muskan! 🎂</h2>
             <p class="message">
-                Today is about celebrating the wonderful person you are. 💕<br><br>
+                Happy 21st Birthday! Turning 21 is a huge milestone, and today is all about celebrating the incredible person you've become. 💕<br><br>
 
-                May your life be filled with genuine smiles,
-                beautiful memories, exciting opportunities,
-                little unexpected joys and people who always
-                remind you how special you are. 🌸<br><br>
+                May your 21st year be filled with unforgettable adventures, genuine smiles, beautiful memories, exciting opportunities, and people who remind you how truly special you are. 🌸<br><br>
 
-                Keep dreaming big, laughing loudly and being
-                your lovely self. You deserve so many beautiful
-                things in this world. ✨<br><br>
+                Keep dreaming big, laughing out loud, and shining your bright light everywhere you go. You deserve all the happiness in the world! ✨<br><br>
 
-                I'm really glad to have you as my friend.
-                I hope this little surprise brings a big smile
-                to your face today. 💗
+                I'm so lucky to have you as my friend. I hope this little surprise brings the biggest smile to your face today. 💗
             </p>
 
-            <h2 style="font-size:28px">Lots of wishes, Sandy 💖</h2>
+            <h2 style="font-size:28px">Lots of love, Sandy 💖</h2>
         </div>
 
         <div class="card">
-            <h2>A little birthday magic ✨</h2>
+            <h2>A little 21st birthday magic ✨</h2>
             <p class="message">
-                Make a wish, close your eyes for a moment,
-                and imagine all the lovely things waiting for you. 🌙<br>
+                Make a wish for your 21st year, close your eyes for a moment,
+                and imagine all the wonderful things coming your way. 🌙<br>
                 <b>Tap your custom birthday cake below!</b>
             </p>
 
@@ -325,13 +319,13 @@ button:hover { transform: translateY(-3px) scale(1.02); }
 
     <div class="footer">
         MADE WITH 💗 BY SANDY<br>
-        A LITTLE BIRTHDAY MEMORY TO KEEP
+        CELEBRATING MUSKAN'S 21ST BIRTHDAY
     </div>
 </div>
 
 <script>
 function confettiBurst() {
-    const symbols = ["💗", "💕", "✨", "🌸", "🎉", "💖", "🎈"];
+    const symbols = ["💗", "💕", "✨", "🌸", "🎉", "💖", "🎈", "🥂"];
     for (let i = 0; i < 45; i++) {
         const item = document.createElement("span");
         item.className = "confetti";
@@ -354,18 +348,18 @@ function openSurprise() {
 function celebrate() {
     confettiBurst();
     document.getElementById("reaction").textContent =
-        "Yayyy, Muskan! 🎉 Sending you a sky full of happiness! 💗";
+        "Yayyy, Happy 21st Muskan! 🎉 Wishing you the best year yet! 💗";
 }
 
 function hug() {
     document.getElementById("reaction").textContent =
-        "Big virtual hug from Sandy! 🤗💗 Consider yourself hugged!";
+        "Big warm 21st birthday hug from Sandy! 🤗💗";
     confettiBurst();
 }
 
 function wish() {
     document.getElementById("reaction").textContent =
-        "✨ Wish made! May something beautiful find its way to you. 🌷💖";
+        "✨ 21st wish made! May all your dreams turn into reality. 🌷💖";
     confettiBurst();
 }
 </script>
