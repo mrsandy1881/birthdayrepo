@@ -3,6 +3,7 @@ import streamlit as st
 import streamlit.components.v1 as components
 import os
 import base64
+import html
 
 st.set_page_config(
     page_title="For Muskan 💗",
@@ -11,282 +12,122 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# ------------------------------------------
-# LOAD EXISTING PHOTO
-# ------------------------------------------
-def load_image(path):
-    if not os.path.exists(path):
-        return ""
+# ---------------------------------
+# LOAD MUSKAN'S PHOTO
+# ---------------------------------
+photo_path = "muskan.jpg"
 
-    with open(path, "rb") as file:
-        data = base64.b64encode(file.read()).decode("utf-8")
+if os.path.exists(photo_path):
+    with open(photo_path, "rb") as f:
+        photo_data = base64.b64encode(f.read()).decode("utf-8")
 
-    ext = os.path.splitext(path)[1].lower()
-    mime_types = {
-        ".jpg": "image/jpeg",
-        ".jpeg": "image/jpeg",
-        ".png": "image/png",
-        ".webp": "image/webp"
-    }
-
-    mime = mime_types.get(ext, "image/jpeg")
-    return f"data:{mime};base64,{data}"
-
-
-photo_src = load_image("muskan.jpg")
-music_src = ""
-
-if os.path.exists("birthday_song.mp3"):
-    with open("birthday_song.mp3", "rb") as file:
-        music_data = base64.b64encode(file.read()).decode("utf-8")
-    music_src = f"data:audio/mpeg;base64,{music_data}"
-
-if photo_src:
-    photo_section = f"""
-        <img class="portrait" src="{photo_src}" alt="Muskan">
-    """
+    extension = os.path.splitext(photo_path)[1].lower()
+    mime = "image/png" if extension == ".png" else "image/jpeg"
+    photo_src = f"data:{mime};base64,{photo_data}"
 else:
-    photo_section = """
-        <div class="photo-placeholder">
-            Add your existing photo as muskan.jpg
-        </div>
-    """
+    photo_src = ""
 
-if music_src:
-    music_section = f"""
-        <audio id="birthdaySong" loop src="{music_src}"></audio>
-    """
-else:
-    music_section = '<audio id="birthdaySong"></audio>'
+photo_section = (
+    f'<img class="portrait" src="{photo_src}" alt="Muskan">'
+    if photo_src
+    else '<div class="photo-placeholder">📸<br>Add Muskan’s photo as muskan.jpg</div>'
+)
 
-# ------------------------------------------
-# REAL CAKE PHOTO
-# ------------------------------------------
-cake_section = """
-<div class="cake-image-wrap">
-    <img
-        class="cake-image"
-        src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=1200&q=90"
-        alt="Birthday cake"
-        onerror="this.style.display='none';document.getElementById('cakeError').style.display='block';"
-    >
-    <div id="cakeError" style="display:none;padding:25px">
-        Cake photo unavailable. Check your internet connection.
-    </div>
-</div>
-
-<div class="cake-label">
-    <span>A LITTLE SWEETNESS, JUST FOR</span>
-    <div class="cake-name">Muskan</div>
-    <div class="cake-rule"></div>
-</div>
-"""
-
-# ------------------------------------------
+# ---------------------------------
 # WEBSITE
-# ------------------------------------------
-page = r"""
+# ---------------------------------
+page = """
 <!DOCTYPE html>
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <style>
-* {
-    box-sizing: border-box;
-}
-
-html {
-    scroll-behavior: smooth;
-}
+* { box-sizing: border-box; }
 
 body {
     margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Arial, sans-serif;
+    color: #713f68;
     background: transparent;
-    color: #30232b;
 }
 
-button {
-    font: inherit;
-}
-
-.website {
-    --ink: #30232b;
-    --muted: #8d737f;
-    --pink: #d66b98;
-    --cream: #fff8f5;
-
-    position: relative;
+.page {
     overflow: hidden;
-    isolation: isolate;
-    padding: 24px 14px 35px;
-    border-radius: 26px;
-    background:
-        radial-gradient(ellipse at 10% 5%, #f8d9e4 0%, transparent 35%),
-        radial-gradient(ellipse at 95% 35%, #e8dff5 0%, transparent 32%),
-        #fff8f5;
-}
-
-.content {
-    max-width: 760px;
-    margin: auto;
     position: relative;
-    z-index: 2;
-}
-
-/* Tiny editorial header */
-.nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    padding: 4px 3px 18px;
-    border-bottom: 1px solid #e9d9dd;
-}
-
-.brand {
-    font-family: Georgia, serif;
-    font-size: 22px;
-    letter-spacing: -.5px;
-}
-
-.brand span {
-    color: #cf6795;
-}
-
-.nav-tag {
-    font-size: 9px;
-    letter-spacing: 2px;
-    color: #977d88;
-    text-align: right;
-}
-
-.hero {
-    padding: 39px 4px 18px;
+    padding: 28px 16px 45px;
     text-align: center;
+    border-radius: 28px;
+    background:
+      radial-gradient(circle at 10% 10%, #ffd5e8, transparent 35%),
+      radial-gradient(circle at 90% 20%, #ded3ff, transparent 35%),
+      linear-gradient(145deg, #fff7fb, #fff0f6, #f5efff);
 }
 
-.eyebrow {
-    font-size: 9px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: #b16a89;
+.pill {
+    display: inline-block;
+    border: 1px solid #edc1dc;
+    background: #ffffffb8;
+    border-radius: 30px;
+    padding: 9px 16px;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: #a14e84;
 }
 
 h1 {
-    font-family: Georgia, "Times New Roman", serif;
-    font-weight: normal;
-    font-size: clamp(45px, 9vw, 77px);
-    letter-spacing: -2.5px;
-    line-height: 1.03;
-    margin: 18px 0 14px;
-    color: #452e3b;
+    font-family: Georgia, serif;
+    font-size: clamp(38px, 8vw, 66px);
+    margin: 20px 0 12px;
+    line-height: 1.1;
+    color: #a04d86;
 }
 
-h1 em {
-    color: #d16e9b;
-    font-weight: normal;
+.subtitle {
+    max-width: 500px;
+    margin: 0 auto 22px;
+    line-height: 1.8;
+    color: #936c90;
+    font-size: 15px;
 }
 
-.intro {
-    max-width: 440px;
-    margin: auto;
-    color: #907783;
-    font-size: 13px;
-    line-height: 1.9;
+.decor {
+    font-size: 24px;
+    letter-spacing: 10px;
+    animation: floaty 2.5s infinite alternate ease-in-out;
 }
 
-/* Editorial photograph */
-.photo-stage {
-    position: relative;
-    max-width: 430px;
-    margin: 28px auto 23px;
-    padding: 0 13px 20px 0;
-    animation: stageEnter 1s ease both;
+@keyframes floaty {
+    to { transform: translateY(-8px); }
 }
 
-.photo-backdrop {
-    position: absolute;
-    inset: 12px 0 0 14px;
-    border-radius: 3px;
-    background: #efd3df;
-    transform: rotate(3deg);
-}
-
-.photo-frame {
-    position: relative;
-    z-index: 1;
-    padding: 7px;
-    background: #fffdfc;
-    box-shadow: 0 17px 38px #6b3c4b1d;
-    transform: rotate(-1.5deg);
-    transition: transform .5s ease, box-shadow .5s ease;
-}
-
-.photo-frame:hover {
-    transform: rotate(0deg) translateY(-4px);
-    box-shadow: 0 24px 44px #6b3c4b2b;
+.photo-wrap {
+    max-width: 340px;
+    margin: 22px auto;
+    padding: 8px;
+    border-radius: 28px;
+    background: linear-gradient(135deg, #ffb8da, #c9b9ff, #ffe2bc);
+    box-shadow: 0 14px 35px #a56d9a30;
+    animation: photoFloat 4s ease-in-out infinite;
 }
 
 .portrait {
     display: block;
     width: 100%;
-    max-height: 480px;
-    min-height: 240px;
+    max-height: 430px;
     object-fit: cover;
-    animation: portraitEnter 1.4s ease both;
+    border-radius: 22px;
+    animation: photoReveal 1.2s ease both;
 }
 
-.photo-placeholder {
-    padding: 90px 12px;
-    color: #8b6c7d;
-    background: #f8e9ef;
-    text-align: center;
+@keyframes photoFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-7px); }
 }
 
-.photo-caption {
-    position: relative;
-    z-index: 2;
-    text-align: right;
-    margin-top: 12px;
-    padding-right: 7px;
-    font-family: Georgia, serif;
-    font-style: italic;
-    color: #977a87;
-    font-size: 13px;
-}
-
-.photo-sticker {
-    position: absolute;
-    z-index: 3;
-    right: -1px;
-    top: 18px;
-    width: 65px;
-    height: 65px;
-    display: grid;
-    place-items: center;
-    border-radius: 50%;
-    background: #d77a9f;
-    color: white;
-    font-family: Georgia, serif;
-    font-size: 11px;
-    text-align: center;
-    line-height: 1.4;
-    transform: rotate(9deg);
-    box-shadow: 0 8px 20px #9c52722b;
-    animation: stickerFloat 3s ease-in-out infinite;
-}
-
-@keyframes stageEnter {
-    from { opacity: 0; transform: translateY(16px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes portraitEnter {
+@keyframes photoReveal {
     from {
-        opacity: .3;
-        transform: scale(1.035);
+        opacity: 0;
+        transform: scale(.95);
         filter: blur(4px);
     }
     to {
@@ -296,285 +137,220 @@ h1 em {
     }
 }
 
-@keyframes stickerFloat {
-    0%, 100% { translate: 0 0; }
-    50% { translate: 0 -5px; }
+.photo-placeholder {
+    padding: 75px 10px;
+    border-radius: 22px;
+    background: #fff7fb;
+    line-height: 2;
 }
 
-/* Cards */
 .card {
-    position: relative;
-    margin: 24px auto;
-    padding: 27px 23px;
-    background: #fffdfc;
-    border: 1px solid #eddee2;
-    border-radius: 4px;
-    box-shadow: 0 12px 30px #613c4b0a;
-}
-
-.card-tag {
-    font-size: 9px;
-    letter-spacing: 2.5px;
-    color: #bb7894;
-    text-transform: uppercase;
+    max-width: 590px;
+    margin: 22px auto;
+    padding: 26px 20px;
+    border-radius: 26px;
+    border: 1px solid #edcce5;
+    background: #ffffffc9;
+    box-shadow: 0 10px 32px #9c699515;
 }
 
 h2 {
-    font-family: Georgia, "Times New Roman", serif;
-    font-weight: normal;
-    font-size: clamp(30px, 6vw, 44px);
-    line-height: 1.2;
-    color: #503544;
-    margin: 15px 0;
+    font-family: Georgia, serif;
+    font-size: clamp(28px, 6vw, 40px);
+    color: #a14e84;
+    line-height: 1.3;
 }
 
 .message {
-    font-size: 14px;
+    color: #795b78;
+    font-size: 15px;
     line-height: 2;
-    color: #816b76;
 }
 
-.primary-btn,
-.secondary-btn {
-    border-radius: 3px;
-    padding: 14px 19px;
-    margin: 7px 3px;
+button {
+    border: none;
     cursor: pointer;
-    font-size: 11px;
-    letter-spacing: .7px;
-    transition: transform .25s, background .25s;
-}
-
-.primary-btn {
+    border-radius: 35px;
+    padding: 13px 21px;
+    margin: 7px 4px;
+    font-size: 14px;
+    font-weight: bold;
     color: white;
-    border: 1px solid #c76c94;
-    background: #c76c94;
+    background: linear-gradient(100deg, #df80b5, #a28ae5);
+    box-shadow: 0 7px 17px #b576b62b;
+    transition: transform .2s;
 }
 
-.secondary-btn {
-    color: #a3557c;
-    border: 1px solid #e8cbd8;
-    background: #fff8f9;
-}
+button:hover { transform: translateY(-3px) scale(1.02); }
 
-.primary-btn:hover,
-.secondary-btn:hover {
-    transform: translateY(-2px);
-}
-
-.primary-btn:hover {
-    background: #ad527d;
+.secondary {
+    color: #98517f;
+    background: white;
+    border: 1px solid #edc5df;
 }
 
 #surprise {
     display: none;
-    animation: reveal .8s ease both;
+    animation: appear .8s ease;
 }
 
-@keyframes reveal {
-    from { opacity: 0; transform: translateY(18px); }
+@keyframes appear {
+    from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Cake photograph */
-.cake-image-wrap {
-    margin: 22px auto 15px;
-    padding: 6px;
-    background: white;
-    border: 1px solid #ead8df;
-    box-shadow: 0 15px 35px #68415118;
+.gift {
+    font-size: 80px;
+    cursor: pointer;
+    display: inline-block;
+    animation: bob 1.4s infinite alternate;
 }
 
-.cake-image {
-    display: block;
-    width: 100%;
-    max-height: 400px;
-    object-fit: cover;
+@keyframes bob {
+    to { transform: translateY(-9px) rotate(4deg); }
 }
 
-.cake-label {
-    margin: 15px auto 20px;
-    padding: 14px 10px;
-    text-align: center;
-    border-top: 1px solid #e8cfd9;
-    border-bottom: 1px solid #e8cfd9;
-}
-
-.cake-label span {
-    color: #ad8194;
-    font-size: 9px;
-    letter-spacing: 2px;
-}
-
-.cake-name {
-    font-family: Georgia, serif;
-    font-size: 39px;
-    color: #c76b95;
-    margin: 5px 0;
-}
-
-.cake-rule {
-    height: 2px;
-    width: 36px;
-    margin: auto;
-    background: #dba5bc;
-}
-
-.candle-row {
-    display: flex;
-    justify-content: center;
-    gap: 18px;
-    height: 45px;
-    margin: 12px 0 5px;
-    align-items: flex-end;
-}
-
-.candle {
+/* ---------------------------------
+   CHAPTER 21 BIRTHDAY SECTION
+--------------------------------- */
+.chapter-card {
+    background: linear-gradient(145deg, #fffafd, #f8efff);
+    border: 1px solid #e8c5dd;
+    box-shadow: 0 15px 40px #9c69951c;
     position: relative;
-    width: 7px;
-    height: 25px;
-    background: repeating-linear-gradient(
-        135deg, #f0c4d7 0 5px, #bca8df 5px 9px
-    );
-    border-radius: 2px;
+    overflow: hidden;
 }
 
-.flame {
-    position: absolute;
-    left: -2px;
-    top: -15px;
-    width: 11px;
-    height: 16px;
-    border-radius: 60% 40% 60% 40%;
-    background: radial-gradient(ellipse at 50% 70%, #fff8ce, #ffb65c 55%, #ed7752);
-    box-shadow: 0 0 12px #ffc16e;
-    animation: flicker .2s infinite alternate;
+.chapter-label {
+    color: #b16b99;
+    font-size: 10px;
+    letter-spacing: 3px;
+    margin-bottom: 4px;
 }
 
-.flame.off {
-    opacity: 0;
-    transform: scale(0);
+.age-number {
+    font-family: Georgia, serif;
+    font-size: clamp(90px, 20vw, 145px);
+    line-height: 1;
+    font-weight: normal;
+    background: linear-gradient(135deg, #e58ab8, #a28ae5);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 10px 30px #d7a4df30;
+    animation: ageReveal 1.1s ease both;
 }
 
-@keyframes flicker {
-    from { transform: rotate(-4deg) scale(1); }
-    to { transform: rotate(4deg) scale(.86, 1.08); }
+.chapter-card h2 {
+    margin-top: 8px;
 }
 
-/* Realistic paper confetti */
-.confetti {
-    position: fixed;
-    z-index: 999;
-    top: -18px;
-    pointer-events: none;
-    animation: paperFall linear forwards;
+.chapter-signature {
+    margin-top: 18px;
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-size: 17px;
+    color: #ad6795;
 }
 
-@keyframes paperFall {
-    0% {
-        transform: translate3d(0, 0, 0) rotate(0deg);
+@keyframes ageReveal {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(.94);
+    }
+    to {
         opacity: 1;
+        transform: translateY(0) scale(1);
     }
-    100% {
-        transform: translate3d(var(--drift), 110vh, 0) rotate(760deg);
-        opacity: .2;
-    }
-}
-
-.flash {
-    position: fixed;
-    inset: 0;
-    z-index: 998;
-    pointer-events: none;
-    background: white;
-    animation: cameraFlash .65s ease-out forwards;
-}
-
-@keyframes cameraFlash {
-    0% { opacity: .8; }
-    100% { opacity: 0; }
 }
 
 #reaction {
-    min-height: 27px;
-    color: #b65f89;
-    line-height: 1.8;
-    font-size: 13px;
+    min-height: 30px;
+    color: #a14e84;
+    font-weight: bold;
+    line-height: 1.7;
+}
+
+.confetti {
+    position: fixed;
+    z-index: 99;
+    top: -20px;
+    pointer-events: none;
+    animation: fall 3.5s linear forwards;
+}
+
+@keyframes fall {
+    to {
+        transform: translateY(110vh) rotate(760deg);
+        opacity: .1;
+    }
 }
 
 .footer {
-    text-align: center;
-    padding: 22px 0 4px;
-    color: #a78b98;
-    font-size: 9px;
+    margin-top: 32px;
+    color: #a783a4;
+    font-size: 11px;
     letter-spacing: 2px;
     line-height: 2;
 }
 
 @media (max-width: 480px) {
-    .website { padding: 19px 10px 28px; }
-    .hero { padding-top: 30px; }
-    .card { padding: 23px 16px; }
-    .photo-stage { max-width: 340px; }
-    .photo-sticker { width: 54px; height: 54px; font-size: 10px; }
-    .message { font-size: 13px; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
-        animation-duration: .01ms !important;
-        animation-iteration-count: 1 !important;
-        scroll-behavior: auto !important;
-    }
+    .page { padding: 24px 10px 35px; }
+    .card { padding: 23px 15px; }
+    button { padding: 12px 16px; }
+    .age-number { font-size: 100px; }
 }
 </style>
 </head>
 
 <body>
-<div class="website">
-<div class="content">
+<div class="page">
 
-    <div class="nav">
-        <div class="brand">little moments<span>.</span></div>
-        <div class="nav-tag">A DAY FOR MUSKAN<br>OCTOBER 14</div>
-    </div>
+    <div class="decor">✧ ♡ ✧</div>
+    <div class="pill">A LITTLE SURPRISE FOR YOU</div>
 
-    <section class="hero">
-        <div class="eyebrow">A page made just for you</div>
-        <h1>Hey, <em>Muskan.</em></h1>
-        <p class="intro">
-            Someone has made a little corner of the internet
-            just to celebrate YOU. 🌷
-        </p>
-    </section>
+    <h1>Hey, Muskan! 💗</h1>
+    <p class="subtitle">
+        Someone has made a little corner of the internet
+        just to celebrate YOU. 🌷
+    </p>
 
-    <div class="photo-stage">
-        <div class="photo-backdrop"></div>
-        <div class="photo-frame">
-            PHOTO_SECTION
-        </div>
-        <div class="photo-sticker">made<br>with love</div>
-        <div class="photo-caption">A little moment, just for you.</div>
-    </div>
+    <div class="photo-wrap">PHOTO_SECTION</div>
 
     <div class="card" id="intro">
-        <div class="card-tag">Your little surprise</div>
-        <h2>Ready for a<br>little birthday magic?</h2>
+        <div style="font-size:48px">🎁</div>
+        <h2>Ready for your surprise?</h2>
         <p class="message">
             There's a little birthday magic waiting for you.<br>
             This moment is all yours. 💌
         </p>
-        <button class="primary-btn" onclick="openSurprise()">
-            OPEN YOUR SURPRISE &nbsp; ↗
-        </button>
+        <button onclick="openSurprise()">Open Your Surprise ✨</button>
     </div>
 
     <div id="surprise">
 
-        <div class="card">
-            <div class="card-tag">Today is all about you</div>
-            <h2>Happy Birthday,<br>Muskan! 🎂</h2>
+        <div class="decor">🎈 ✨ 🎈</div>
 
+        <div class="card chapter-card">
+            <div class="chapter-label">A NEW CHAPTER BEGINS</div>
+            <div class="age-number">21</div>
+            <h2>Chapter 21, Muskan.</h2>
+            <p class="message">
+                Twenty-one looks like a beautiful beginning. 💗<br><br>
+
+                Here's to becoming more of yourself, choosing happiness,
+                chasing the dreams that excite you, collecting unforgettable
+                memories, and finding magic in the little things.<br><br>
+
+                May this chapter be your most confident, happiest,
+                and most beautiful one yet. You deserve a life that
+                feels as wonderful as the dreams in your heart. ✨
+            </p>
+            <div class="chapter-signature">Your twenties, your story. ♡</div>
+        </div>
+
+        <div class="card">
+            <h2>Happy Birthday,<br>Muskan! 🎂</h2>
             <p class="message">
                 Today is about celebrating the wonderful person you are. 💕<br><br>
 
@@ -596,170 +372,79 @@ h2 {
         </div>
 
         <div class="card">
-            <div class="card-tag">Something sweet</div>
-            <h2>A little birthday magic.</h2>
-
+            <h2 style="font-size:30px">A little birthday magic ✨</h2>
             <p class="message">
                 Make a wish, close your eyes for a moment,
                 and imagine all the lovely things waiting for you. 🌙
             </p>
 
-            CAKE_SECTION
+            <div class="gift" onclick="celebrate()">🎂</div>
+            <p class="message">Tap the cake for more birthday magic!</p>
 
-            <div class="candle-row" id="candles">
-                <div class="candle"><div class="flame"></div></div>
-                <div class="candle"><div class="flame"></div></div>
-                <div class="candle"><div class="flame"></div></div>
-                <div class="candle"><div class="flame"></div></div>
-                <div class="candle"><div class="flame"></div></div>
-            </div>
-
-            <p class="message">Take a breath. Make a wish. This moment is yours.</p>
-
-            <button class="primary-btn" onclick="blowCandles()">
-                MAKE A WISH &nbsp; ✧
-            </button>
-
-            <div style="margin-top:17px">
-                <button class="secondary-btn" onclick="celebrate()">A LITTLE MORE MAGIC</button>
-                <button class="secondary-btn" onclick="hug()">A VIRTUAL HUG</button>
-                <button class="secondary-btn" onclick="wish()">MAKE ANOTHER WISH</button>
-                <button class="secondary-btn" onclick="toggleMusic()" id="musicButton">
-                    ▶ PLAY BIRTHDAY MUSIC
-                </button>
-            </div>
+            <button onclick="celebrate()">More confetti! 🎉</button>
+            <button class="secondary" onclick="hug()">Send a virtual hug 🤗</button>
+            <button class="secondary" onclick="wish()">Make a wish 🌟</button>
 
             <p id="reaction" aria-live="polite"></p>
         </div>
     </div>
 
     <div class="footer">
-        MADE WITH LOVE BY SANDY<br>
+        MADE WITH 💗 BY SANDY<br>
         A LITTLE BIRTHDAY MEMORY TO KEEP
     </div>
 </div>
-</div>
-
-MUSIC_SECTION
 
 <script>
-let musicPlaying = false;
-let candlesBlown = false;
-
 function confettiBurst() {
-    const colors = [
-        "#d66b98", "#e8a9c2", "#b8a5df",
-        "#f3d6a1", "#ffffff", "#d7b4ca"
-    ];
+    const symbols = ["💗", "💕", "✨", "🌸", "🎉", "💖", "🎈"];
 
-    for (let i = 0; i < 100; i++) {
-        const piece = document.createElement("span");
-        piece.className = "confetti";
+    for (let i = 0; i < 45; i++) {
+        const item = document.createElement("span");
+        item.className = "confetti";
+        item.textContent =
+            symbols[Math.floor(Math.random() * symbols.length)];
 
-        piece.style.background =
-            colors[Math.floor(Math.random() * colors.length)];
+        item.style.left = Math.random() * 100 + "vw";
+        item.style.animationDelay = Math.random() * 1.2 + "s";
+        item.style.fontSize = (16 + Math.random() * 17) + "px";
 
-        piece.style.left = Math.random() * 100 + "vw";
-        piece.style.width = (4 + Math.random() * 6) + "px";
-        piece.style.height = (7 + Math.random() * 10) + "px";
-        piece.style.borderRadius = Math.random() > .5 ? "50%" : "1px";
-        piece.style.setProperty(
-            "--drift", (Math.random() * 200 - 100) + "px"
-        );
-        piece.style.animationDuration = (3 + Math.random() * 2) + "s";
-        piece.style.animationDelay = Math.random() * .8 + "s";
-
-        document.body.appendChild(piece);
-        setTimeout(() => piece.remove(), 6500);
+        document.body.appendChild(item);
+        setTimeout(() => item.remove(), 5000);
     }
-}
-
-function cameraFlash() {
-    const flash = document.createElement("div");
-    flash.className = "flash";
-    document.body.appendChild(flash);
-    setTimeout(() => flash.remove(), 700);
 }
 
 function openSurprise() {
     document.getElementById("intro").style.display = "none";
     document.getElementById("surprise").style.display = "block";
 
-    cameraFlash();
     confettiBurst();
 
-    setTimeout(() => {
-        document.getElementById("surprise").scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-        });
-    }, 100);
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
 }
 
 function celebrate() {
     confettiBurst();
-    cameraFlash();
 
     document.getElementById("reaction").textContent =
-        "A little extra happiness, just for you, Muskan. 💗";
+        "Yayyy, Muskan! 🎉 Sending you a sky full of happiness! 💗";
 }
 
 function hug() {
     document.getElementById("reaction").textContent =
-        "Big virtual hug from Sandy! Consider yourself hugged. 🤗💗";
+        "Big virtual hug from Sandy! 🤗💗 Consider yourself hugged!";
+
     confettiBurst();
 }
 
 function wish() {
     document.getElementById("reaction").textContent =
-        "Wish made! May something beautiful find its way to you. 🌷💖";
+        "✨ Wish made! May something beautiful find its way to you. 🌷💖";
+
     confettiBurst();
-}
-
-function blowCandles() {
-    const flames = document.querySelectorAll(".flame");
-
-    if (!candlesBlown) {
-        flames.forEach(flame => flame.classList.add("off"));
-        candlesBlown = true;
-
-        document.getElementById("reaction").textContent =
-            "Candles out! Keep your wish in your heart, Muskan. ✨";
-
-        confettiBurst();
-    } else {
-        flames.forEach(flame => flame.classList.remove("off"));
-        candlesBlown = false;
-
-        document.getElementById("reaction").textContent =
-            "One more chance to make a wish. 💗";
-    }
-}
-
-async function toggleMusic() {
-    const audio = document.getElementById("birthdaySong");
-    const button = document.getElementById("musicButton");
-
-    if (!audio.getAttribute("src")) {
-        document.getElementById("reaction").textContent =
-            "Add birthday_song.mp3 to the app folder to enable music.";
-        return;
-    }
-
-    try {
-        if (!musicPlaying) {
-            await audio.play();
-            musicPlaying = true;
-            button.textContent = "❚❚ PAUSE BIRTHDAY MUSIC";
-        } else {
-            audio.pause();
-            musicPlaying = false;
-            button.textContent = "▶ PLAY BIRTHDAY MUSIC";
-        }
-    } catch (error) {
-        document.getElementById("reaction").textContent =
-            "Tap the music button again to start playback.";
-    }
 }
 </script>
 </body>
@@ -767,7 +452,5 @@ async function toggleMusic() {
 """
 
 page = page.replace("PHOTO_SECTION", photo_section)
-page = page.replace("CAKE_SECTION", cake_section)
-page = page.replace("MUSIC_SECTION", music_section)
 
-components.html(page, height=2700, scrolling=True)
+components.html(page, height=2100, scrolling=True)
