@@ -250,7 +250,7 @@ button:hover { transform: translateY(-3px) scale(1.02); }
     margin-top: 4px;
 }
 
-#lock-card, #open-card, #surprise, #top-decor {
+#lock-card, #open-card, #surprise, #top-decor, #photo-container {
     display: none;
 }
 
@@ -259,7 +259,7 @@ button:hover { transform: translateY(-3px) scale(1.02); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-#surprise {
+#surprise, #photo-container {
     animation: appear .8s ease;
 }
 
@@ -303,7 +303,7 @@ button:hover { transform: translateY(-3px) scale(1.02); }
 <body>
 <div class="page">
 
-    <!-- TOP DECOR (Revealed after opening) -->
+    <!-- TOP DECOR (Revealed after opening surprise) -->
     <div class="decor" id="top-decor">✧ 21 ✧</div>
     <div class="pill" id="top-pill">A SPECIAL MOMENT</div>
 
@@ -313,7 +313,7 @@ button:hover { transform: translateY(-3px) scale(1.02); }
         Something wonderful and exciting is on its way. Stay tuned! 🌷
     </p>
 
-    <!-- HIDDEN PHOTO WRAP (Revealed only when surprise opens) -->
+    <!-- PHOTO WRAP (Hidden initially, revealed after clicking open surprise) -->
     <div class="photo-wrap" id="photo-container">
         PHOTO_SECTION
     </div>
@@ -347,7 +347,7 @@ button:hover { transform: translateY(-3px) scale(1.02); }
         </div>
     </div>
 
-    <!-- 2. OPEN SURPRISE CARD (Shown after 12 AM before clicking) -->
+    <!-- 2. OPEN SURPRISE CARD (Shown after 12 AM, before clicking open) -->
     <div class="card" id="open-card">
         <div style="font-size:48px">🎁</div>
         <h2>The time has arrived!</h2>
@@ -412,11 +412,11 @@ function checkState() {
     const distance = targetDate - now;
 
     if (distance <= 0 || isUnlocked) {
-        // Past midnight: Show the "Open Surprise" button card, hide countdown
+        // Countdown finished: Show the "Open Surprise" button card, hide countdown
         document.getElementById("lock-card").style.display = "none";
         document.getElementById("open-card").style.display = "block";
     } else {
-        // Before midnight: Show countdown card, hide open button
+        // Before countdown finishes: Show countdown card, hide open button
         document.getElementById("lock-card").style.display = "block";
         document.getElementById("open-card").style.display = "none";
     }
@@ -440,7 +440,7 @@ function openSurprise() {
     // Hide the open button card
     document.getElementById("open-card").style.display = "none";
     
-    // REVEAL ALL 21ST BIRTHDAY DETAILS & PHOTO
+    // REVEAL ALL 21ST BIRTHDAY DETAILS, PHOTO, AND CAKE CARD
     document.getElementById("top-decor").style.display = "block";
     document.getElementById("top-pill").textContent = "ENTERING A FABULOUS NEW CHAPTER";
     document.getElementById("main-title").textContent = "Happy 21st, Muskan! 💗";
