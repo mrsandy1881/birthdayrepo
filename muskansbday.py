@@ -2,6 +2,7 @@ import streamlit as st
 import streamlit.components.v1 as components
 import os
 import base64
+from datetime import datetime
 
 st.set_page_config(
     page_title="For Muskan 💗",
@@ -9,6 +10,16 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="collapsed"
 )
+
+# -------------------------------------------------------------
+# SET MUSKAN'S BIRTHDAY DATE & TIME (12:00 AM Midnight)
+# Format: datetime(YYYY, MM, DD, HH, MM, SS)
+# -------------------------------------------------------------
+BIRTHDAY_TARGET = datetime(2026, 10, 15, 0, 0, 0)  # Update as needed
+
+# Check server-side if midnight has passed
+now = datetime.now()
+is_unlocked = now >= BIRTHDAY_TARGET
 
 # ---------------------------------
 # LOAD ASSETS (PHOTO, CAKE)
@@ -38,11 +49,85 @@ cake_section = (
 )
 
 # ---------------------------------
-# SET BIRTHDAY TARGET TIME (Modify as needed)
-# Format: YYYY-MM-DDTHH:MM:SS
+# CONTENT SECTIONS (LOCKED vs UNLOCKED)
 # ---------------------------------
-BIRTHDAY_TARGET = "2026-10-15T00:00:00"  # Set to Muskan's birthday midnight date
+if not is_unlocked:
+    surprise_content = """
+    <div class="card" id="lock-card">
+        <div style="font-size:48px">🔒 ✨</div>
+        <h2>Locked Until 12:00 AM Midnight</h2>
+        <p class="message">
+            Shhh! Your 21st birthday surprise is safely locked inside.<br>
+            It will automatically open right when the clock strikes 12:00 AM! 🌙
+        </p>
+        
+        <div class="countdown-grid">
+            <div class="time-box">
+                <div class="time-number" id="days">00</div>
+                <div class="time-label">DAYS</div>
+            </div>
+            <div class="time-box">
+                <div class="time-number" id="hours">00</div>
+                <div class="time-label">HOURS</div>
+            </div>
+            <div class="time-box">
+                <div class="time-number" id="minutes">00</div>
+                <div class="time-label">MINS</div>
+            </div>
+            <div class="time-box">
+                <div class="time-number" id="seconds">00</div>
+                <div class="time-label">SECS</div>
+            </div>
+        </div>
+        <p style="font-size: 13px; color: #a14e84; font-weight: 600; margin-top: 15px;">
+            ⏳ Please wait until midnight... Page will auto-unlock!
+        </p>
+    </div>
+    """
+else:
+    surprise_content = """
+    <div id="surprise">
+        <div class="decor">🎈 ✨ 🎈</div>
 
+        <div class="card">
+            <h2>Cheers to 21 Years, Muskan! 🎂</h2>
+            <p class="message">
+                Happy 21st Birthday! Turning 21 is a huge milestone, and today is all about celebrating the incredible person you've become. 💕<br><br>
+
+                May your 21st year be filled with unforgettable adventures, genuine smiles, beautiful memories, exciting opportunities, and people who remind you how truly special you are. 🌸<br><br>
+
+                Keep dreaming big, laughing out loud, and shining your bright light everywhere you go. You deserve all the happiness in the world! ✨<br><br>
+
+                I'm so lucky to have you as my friend. I hope this little surprise brings the biggest smile to your face today. 💗
+            </p>
+
+            <h2 style="font-size:28px">Lots of love, Sandy 💖</h2>
+        </div>
+
+        <div class="card">
+            <h2>A little 21st birthday magic ✨</h2>
+            <p class="message">
+                Make a wish for your 21st year, close your eyes for a moment,
+                and imagine all the wonderful things coming your way. 🌙<br>
+                <b>Tap your custom birthday cake below!</b>
+            </p>
+
+            <div class="cake-wrap" onclick="celebrate()">
+                CAKE_SECTION
+            </div>
+
+            <button onclick="celebrate()">More confetti! 🎉</button>
+            <button class="secondary" onclick="hug()">Send a virtual hug 🤗</button>
+            <button class="secondary" onclick="wish()">Make a wish 🌟</button>
+
+            <p id="reaction" aria-live="polite"></p>
+        </div>
+    </div>
+    """
+
+# ---------------------------------
+# HTML & CSS PAGE TEMPLATE
+# ---------------------------------
 page = """
 <!DOCTYPE html>
 <html>
@@ -111,7 +196,6 @@ h1 {
     to { transform: translateY(-8px); }
 }
 
-/* Glowing Neon Animated Photo Frame */
 .photo-wrap {
     max-width: 340px;
     margin: 22px auto;
@@ -213,7 +297,6 @@ button:hover { transform: translateY(-3px) scale(1.02); }
     border: 1px solid #edc5df;
 }
 
-/* Countdown Grid Styling */
 .countdown-grid {
     display: flex;
     justify-content: center;
@@ -242,16 +325,6 @@ button:hover { transform: translateY(-3px) scale(1.02); }
     color: #a783a4;
     font-weight: 600;
     margin-top: 4px;
-}
-
-#surprise {
-    display: none;
-    animation: appear .8s ease;
-}
-
-@keyframes appear {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
 }
 
 #reaction {
@@ -306,73 +379,8 @@ button:hover { transform: translateY(-3px) scale(1.02); }
     <!-- Animated Neon Instagram Photo Frame -->
     <div class="photo-wrap">PHOTO_SECTION</div>
 
-    <!-- COUNTDOWN / LOCK CARD -->
-    <div class="card" id="lock-card">
-        <div style="font-size:48px">⏳</div>
-        <h2>Waiting for 12:00 AM...</h2>
-        <p class="message">
-            The grand 21st birthday surprise unlocks automatically right when the clock strikes midnight! ✨<br>
-            Stay right here, the magic is loading... 🌙
-        </p>
-        
-        <div class="countdown-grid">
-            <div class="time-box">
-                <div class="time-number" id="days">00</div>
-                <div class="time-label">DAYS</div>
-            </div>
-            <div class="time-box">
-                <div class="time-number" id="hours">00</div>
-                <div class="time-label">HOURS</div>
-            </div>
-            <div class="time-box">
-                <div class="time-number" id="minutes">00</div>
-                <div class="time-label">MINS</div>
-            </div>
-            <div class="time-box">
-                <div class="time-number" id="seconds">00</div>
-                <div class="time-label">SECS</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- UNLOCKED SURPRISE CONTENT -->
-    <div id="surprise">
-        <div class="decor">🎈 ✨ 🎈</div>
-
-        <div class="card">
-            <h2>Cheers to 21 Years, Muskan! 🎂</h2>
-            <p class="message">
-                Happy 21st Birthday! Turning 21 is a huge milestone, and today is all about celebrating the incredible person you've become. 💕<br><br>
-
-                May your 21st year be filled with unforgettable adventures, genuine smiles, beautiful memories, exciting opportunities, and people who remind you how truly special you are. 🌸<br><br>
-
-                Keep dreaming big, laughing out loud, and shining your bright light everywhere you go. You deserve all the happiness in the world! ✨<br><br>
-
-                I'm so lucky to have you as my friend. I hope this little surprise brings the biggest smile to your face today. 💗
-            </p>
-
-            <h2 style="font-size:28px">Lots of love, Sandy 💖</h2>
-        </div>
-
-        <div class="card">
-            <h2>A little 21st birthday magic ✨</h2>
-            <p class="message">
-                Make a wish for your 21st year, close your eyes for a moment,
-                and imagine all the wonderful things coming your way. 🌙<br>
-                <b>Tap your custom birthday cake below!</b>
-            </p>
-
-            <div class="cake-wrap" onclick="celebrate()">
-                CAKE_SECTION
-            </div>
-
-            <button onclick="celebrate()">More confetti! 🎉</button>
-            <button class="secondary" onclick="hug()">Send a virtual hug 🤗</button>
-            <button class="secondary" onclick="wish()">Make a wish 🌟</button>
-
-            <p id="reaction" aria-live="polite"></p>
-        </div>
-    </div>
+    <!-- DYNAMIC SURPRISE / LOCK SECTION -->
+    SURPRISE_CONTENT
 
     <div class="footer">
         MADE WITH 💗 BY SANDY<br>
@@ -381,8 +389,8 @@ button:hover { transform: translateY(-3px) scale(1.02); }
 </div>
 
 <script>
-const targetDate = new Date("TARGET_DATE_HERE").getTime();
-let unlocked = false;
+const targetDate = new Date("TARGET_DATE_STR").getTime();
+const isUnlocked = IS_UNLOCKED_BOOL;
 
 function confettiBurst() {
     const symbols = ["💗", "💕", "✨", "🌸", "🎉", "💖", "🎈", "🥂"];
@@ -398,26 +406,21 @@ function confettiBurst() {
     }
 }
 
-function openSurprise() {
-    if (!unlocked) {
-        unlocked = true;
-        document.getElementById("lock-card").style.display = "none";
-        document.getElementById("surprise").style.display = "block";
+if (isUnlocked) {
+    window.addEventListener('DOMContentLoaded', () => {
         confettiBurst();
-        window.scrollTo({ top: 0, behavior: "smooth" });
-    }
+    });
 }
 
 function updateCountdown() {
+    const daysElem = document.getElementById("days");
+    if (!daysElem) return;
+
     const now = new Date().getTime();
     const distance = targetDate - now;
 
     if (distance <= 0) {
-        document.getElementById("days").textContent = "00";
-        document.getElementById("hours").textContent = "00";
-        document.getElementById("minutes").textContent = "00";
-        document.getElementById("seconds").textContent = "00";
-        openSurprise();
+        window.location.reload();
         return;
     }
 
@@ -457,9 +460,14 @@ function wish() {
 </html>
 """
 
-# Safe String Replacements
+# Format Target Date string for JS
+target_str = BIRTHDAY_TARGET.strftime("%Y-%m-%dT%H:%M:%S")
+
+# Inject placeholders safely
 page = page.replace("PHOTO_SECTION", photo_section)
 page = page.replace("CAKE_SECTION", cake_section)
-page = page.replace("TARGET_DATE_HERE", BIRTHDAY_TARGET)
+page = page.replace("SURPRISE_CONTENT", surprise_content)
+page = page.replace("TARGET_DATE_STR", target_str)
+page = page.replace("IS_UNLOCKED_BOOL", "true" if is_unlocked else "false")
 
 components.html(page, height=1750, scrolling=True)
