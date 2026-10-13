@@ -12,10 +12,10 @@ st.set_page_config(
 )
 
 # -------------------------------------------------------------
-# SET MUSKAN'S BIRTHDAY DATE & TIME (12:00 AM Midnight)
+# SET MUSKAN'S BIRTHDAY DATE & TIME (14th Oct Midnight IST)
 # Format: datetime(YYYY, MM, DD, HH, MM, SS)
 # -------------------------------------------------------------
-BIRTHDAY_TARGET = datetime(2026, 10, 15, 0, 0, 0)  # Update as needed
+BIRTHDAY_TARGET = datetime(2026, 10, 14, 0, 0, 0)
 
 # Check server-side if midnight has passed
 now = datetime.now()
@@ -397,14 +397,15 @@ button:hover { transform: translateY(-3px) scale(1.02); }
         </div>
     </div>
 
-    <div class="footer">
-        MADE WITH 💗 BY SANDY<br>
-        CELEBRATING MUSKAN'S 21ST BIRTHDAY
+    <!-- FOOTER (ONLY SHOWS MADE BY SANDY BEFORE REVEAL) -->
+    <div class="footer" id="page-footer">
+        MADE WITH 💗 BY SANDY
     </div>
 </div>
 
 <script>
-const targetDate = new Date("TARGET_DATE_STR").getTime();
+// Target October 14th 00:00:00 Indian Standard Time (+05:30)
+const targetDate = new Date("2026-10-14T00:00:00+05:30").getTime();
 let isUnlocked = IS_UNLOCKED_BOOL;
 
 function checkState() {
@@ -412,11 +413,9 @@ function checkState() {
     const distance = targetDate - now;
 
     if (distance <= 0 || isUnlocked) {
-        // Countdown finished: Show the "Open Surprise" button card, hide countdown
         document.getElementById("lock-card").style.display = "none";
         document.getElementById("open-card").style.display = "block";
     } else {
-        // Before countdown finishes: Show countdown card, hide open button
         document.getElementById("lock-card").style.display = "block";
         document.getElementById("open-card").style.display = "none";
     }
@@ -437,7 +436,6 @@ function confettiBurst() {
 }
 
 function openSurprise() {
-    // Hide the open button card
     document.getElementById("open-card").style.display = "none";
     
     // REVEAL ALL 21ST BIRTHDAY DETAILS, PHOTO, AND CAKE CARD
@@ -448,6 +446,7 @@ function openSurprise() {
     
     document.getElementById("photo-container").style.display = "block";
     document.getElementById("surprise").style.display = "block";
+    document.getElementById("page-footer").innerHTML = "MADE WITH 💗 BY SANDY<br>CELEBRATING MUSKAN'S 21ST BIRTHDAY";
     
     confettiBurst();
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -503,13 +502,9 @@ function wish() {
 </html>
 """
 
-# Format Target Date string for JS
-target_str = BIRTHDAY_TARGET.strftime("%Y-%m-%dT%H:%M:%S")
-
 # Inject placeholders safely
 page = page.replace("PHOTO_SECTION", photo_section)
 page = page.replace("CAKE_SECTION", cake_section)
-page = page.replace("TARGET_DATE_STR", target_str)
 page = page.replace("IS_UNLOCKED_BOOL", "true" if is_unlocked else "false")
 
 components.html(page, height=1750, scrolling=True)
