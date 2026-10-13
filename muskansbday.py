@@ -3,271 +3,355 @@ import streamlit as st
 import streamlit.components.v1 as components
 import os
 import base64
-import html
 
 st.set_page_config(
-    page_title="For Muskan 💗",
-    page_icon="🎁",
+    page_title="Muskan's Birthday ✨",
+    page_icon="💗",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
-# ---------------------------------
-# LOAD MUSKAN'S PHOTO
-# ---------------------------------
-photo_path = "muskan.jpg"
+# ------------------------------------------
+# YOUR EXISTING PHOTO
+# ------------------------------------------
+photo_src = ""
 
-if os.path.exists(photo_path):
-    with open(photo_path, "rb") as f:
-        photo_data = base64.b64encode(f.read()).decode("utf-8")
+if os.path.exists("muskan.jpg"):
+    with open("muskan.jpg", "rb") as f:
+        photo_src = (
+            "data:image/jpeg;base64,"
+            + base64.b64encode(f.read()).decode()
+        )
 
-    extension = os.path.splitext(photo_path)[1].lower()
-    mime = "image/png" if extension == ".png" else "image/jpeg"
-    photo_src = f"data:{mime};base64,{photo_data}"
-else:
-    photo_src = ""
+if not photo_src:
+    photo_src = "https://placehold.co/600x750/24172d/ffffff?text=Muskan"
 
-# Optional music file: birthday_song.mp3
-music_path = "birthday_song.mp3"
-
-if os.path.exists(music_path):
-    with open(music_path, "rb") as f:
-        music_data = base64.b64encode(f.read()).decode("utf-8")
-    audio_src = f"data:audio/mpeg;base64,{music_data}"
-else:
-    audio_src = ""
-
-photo_section = (
-    f'<img class="portrait" src="{photo_src}" alt="Muskan">'
-    if photo_src
-    else '<div class="photo-placeholder">📸<br>Add Muskan’s photo as muskan.jpg</div>'
+# ------------------------------------------
+# CAKE PHOTO
+# ------------------------------------------
+# Realistic cake photograph from Unsplash.
+# Internet access is needed to load this image.
+cake_src = (
+    "https://images.unsplash.com/photo-1578985545062-69928b1d9587"
+    "?auto=format&fit=crop&w=1000&q=85"
 )
 
-music_section = (
-    f'<audio id="birthdaySong" loop src="{audio_src}"></audio>'
-    if audio_src
-    else '<audio id="birthdaySong"></audio>'
-)
-
-page = """
+# ------------------------------------------
+# HTML PAGE
+# ------------------------------------------
+page = r"""
 <!DOCTYPE html>
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <style>
 * { box-sizing: border-box; }
 
+html { scroll-behavior: smooth; }
+
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
-    color: #713f68;
     background: transparent;
+    font-family: Inter, Arial, sans-serif;
+    color: #fff1fa;
 }
 
-.page {
+.site {
     overflow: hidden;
     position: relative;
-    padding: 28px 16px 45px;
-    text-align: center;
-    border-radius: 28px;
+    border-radius: 25px;
+    padding: 30px 18px 35px;
     background:
-      radial-gradient(circle at 10% 10%, #ffd5e8, transparent 35%),
-      radial-gradient(circle at 90% 20%, #ded3ff, transparent 35%),
-      linear-gradient(145deg, #fff7fb, #fff0f6, #f5efff);
+      radial-gradient(ellipse at 15% 5%, #773b76 0%, transparent 38%),
+      radial-gradient(ellipse at 90% 25%, #3c317c 0%, transparent 40%),
+      linear-gradient(150deg, #100d20, #20112c 52%, #120e25);
 }
 
-.pill {
+.glow {
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    filter: blur(85px);
+    opacity: .28;
+    pointer-events: none;
+    animation: drift 8s ease-in-out infinite alternate;
+}
+
+.glow.one { background: #ff58b4; top: 10%; left: -100px; }
+.glow.two { background: #8870ff; top: 48%; right: -100px; }
+
+@keyframes drift {
+    from { transform: translateY(-20px); }
+    to { transform: translateY(50px); }
+}
+
+.content {
+    position: relative;
+    z-index: 1;
+    max-width: 850px;
+    margin: auto;
+    text-align: center;
+}
+
+.topline {
     display: inline-block;
-    border: 1px solid #edc1dc;
-    background: #ffffffb8;
-    border-radius: 30px;
     padding: 9px 16px;
-    font-size: 11px;
-    letter-spacing: 2px;
-    color: #a14e84;
+    border: 1px solid #ffffff30;
+    border-radius: 30px;
+    background: #ffffff0b;
+    color: #ffc5e9;
+    font-size: 10px;
+    letter-spacing: 3px;
 }
 
 h1 {
     font-family: Georgia, serif;
-    font-size: clamp(38px, 8vw, 66px);
-    margin: 20px 0 12px;
-    line-height: 1.1;
-    color: #a04d86;
+    font-size: clamp(42px, 8vw, 78px);
+    line-height: 1.08;
+    letter-spacing: -2px;
+    margin: 24px 0 14px;
+    background: linear-gradient(100deg, #fff4fc, #ff9dd5, #d6c4ff);
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
 }
 
 .subtitle {
-    max-width: 500px;
-    margin: 0 auto 22px;
-    line-height: 1.8;
-    color: #936c90;
+    color: #d9c1df;
     font-size: 15px;
+    line-height: 1.9;
+    max-width: 520px;
+    margin: 0 auto 24px;
 }
 
-.decor {
-    font-size: 24px;
-    letter-spacing: 10px;
-    animation: floaty 2.5s infinite alternate ease-in-out;
-}
-
-@keyframes floaty {
-    to { transform: translateY(-8px); }
-}
-
-.photo-wrap {
-    max-width: 340px;
-    margin: 22px auto;
-    padding: 8px;
-    border-radius: 28px;
-    background: linear-gradient(135deg, #ffb8da, #c9b9ff, #ffe2bc);
-    box-shadow: 0 14px 35px #a56d9a30;
+.portrait-wrap {
+    position: relative;
+    width: min(100%, 380px);
+    margin: 28px auto;
+    padding: 5px;
+    border-radius: 25px;
+    background: linear-gradient(135deg, #ff90d0, #9b7dff, #ffe2b2);
+    box-shadow: 0 0 35px #ff62c12a;
+    animation: photoFloat 4s ease-in-out infinite;
 }
 
 .portrait {
     display: block;
     width: 100%;
-    max-height: 430px;
+    max-height: 470px;
     object-fit: cover;
-    border-radius: 22px;
+    border-radius: 21px;
+    animation: photoReveal 1.5s ease both;
 }
 
-.photo-placeholder {
-    padding: 75px 10px;
-    border-radius: 22px;
-    background: #fff7fb;
-    line-height: 2;
+@keyframes photoFloat {
+    0%, 100% { transform: translateY(0) rotate(-.5deg); }
+    50% { transform: translateY(-9px) rotate(.5deg); }
+}
+
+@keyframes photoReveal {
+    from { opacity: 0; transform: scale(.93); filter: blur(5px); }
+    to { opacity: 1; transform: scale(1); filter: blur(0); }
+}
+
+.photo-caption {
+    margin-top: 13px;
+    color: #f5c4e6;
+    font-size: 12px;
+    letter-spacing: 2px;
 }
 
 .card {
-    max-width: 590px;
-    margin: 22px auto;
-    padding: 26px 20px;
-    border-radius: 26px;
-    border: 1px solid #edcce5;
-    background: #ffffffc9;
-    box-shadow: 0 10px 32px #9c699515;
+    margin: 28px auto;
+    padding: 25px 20px;
+    max-width: 670px;
+    border: 1px solid #ffffff20;
+    border-radius: 25px;
+    background: linear-gradient(145deg, #ffffff12, #ffffff05);
+    box-shadow: 0 18px 50px #00000020;
+    backdrop-filter: blur(12px);
 }
 
 h2 {
     font-family: Georgia, serif;
-    font-size: clamp(28px, 6vw, 40px);
-    color: #a14e84;
-    line-height: 1.3;
+    font-size: clamp(28px, 5vw, 43px);
+    line-height: 1.25;
+    color: #ffd4ed;
+    margin: 12px 0;
 }
 
-.message {
-    color: #795b78;
+.wish {
+    color: #eee0f2;
     font-size: 15px;
     line-height: 2;
 }
 
 button {
-    border: none;
     cursor: pointer;
-    border-radius: 35px;
-    padding: 13px 21px;
+    border: 1px solid #ffffff20;
+    border-radius: 40px;
+    padding: 13px 20px;
     margin: 7px 4px;
-    font-size: 14px;
-    font-weight: bold;
     color: white;
-    background: linear-gradient(100deg, #df80b5, #a28ae5);
-    box-shadow: 0 7px 17px #b576b62b;
-    transition: transform .2s;
+    font-size: 13px;
+    font-weight: 600;
+    background: linear-gradient(105deg, #e85da8, #8d71ec);
+    box-shadow: 0 7px 25px #bc5da333;
+    transition: transform .2s, box-shadow .2s;
 }
 
-button:hover { transform: translateY(-3px) scale(1.02); }
+button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 28px #bc5da355;
+}
 
 .secondary {
-    color: #98517f;
-    background: white;
-    border: 1px solid #edc5df;
+    background: #ffffff0c;
+    border: 1px solid #ffffff30;
 }
 
-#surprise {
-    display: none;
-    animation: appear .8s ease;
-}
+#surprise { display: none; animation: reveal .9s ease both; }
 
-@keyframes appear {
-    from { opacity: 0; transform: translateY(20px); }
+@keyframes reveal {
+    from { opacity: 0; transform: translateY(22px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
 .gift {
-    font-size: 80px;
-    cursor: pointer;
-    display: inline-block;
-    animation: bob 1.4s infinite alternate;
+    font-size: 65px;
+    margin: 12px;
+    animation: giftBounce 1.5s infinite alternate;
 }
 
-@keyframes bob {
-    to { transform: translateY(-9px) rotate(4deg); }
+@keyframes giftBounce {
+    to { transform: translateY(-7px) rotate(5deg); }
 }
 
-#reaction {
-    min-height: 30px;
-    color: #a14e84;
-    font-weight: bold;
+.cake-frame {
+    max-width: 570px;
+    margin: 24px auto;
+    padding: 8px;
+    border-radius: 23px;
+    background: linear-gradient(130deg, #ff9bce, #c4a7ff, #ffe5b6);
+    box-shadow: 0 0 45px #ef80cb24;
+    overflow: hidden;
+}
+
+.cake {
+    display: block;
+    width: 100%;
+    max-height: 390px;
+    object-fit: cover;
+    border-radius: 17px;
+    animation: cakeAppear 1.2s ease both;
+}
+
+@keyframes cakeAppear {
+    from { transform: scale(1.08); opacity: .4; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.cake-name {
+    margin-top: 15px;
+    font-family: Georgia, serif;
+    font-size: 28px;
+    color: #ffb8e2;
+    text-shadow: 0 0 22px #ff67c7;
+}
+
+.cake-note {
+    font-size: 12px;
     line-height: 1.7;
+    color: #d7c4e3;
+}
+
+#response {
+    min-height: 28px;
+    color: #ffbce4;
+    line-height: 1.8;
+    margin-top: 12px;
+}
+
+.footer {
+    margin-top: 36px;
+    color: #c1a7cb;
+    font-size: 10px;
+    letter-spacing: 2px;
+    line-height: 2.1;
 }
 
 .confetti {
     position: fixed;
-    z-index: 99;
-    top: -20px;
+    z-index: 100;
+    top: -25px;
     pointer-events: none;
-    animation: fall 3.5s linear forwards;
+    animation: confettiFall 4s linear forwards;
 }
 
-@keyframes fall {
-    to { transform: translateY(110vh) rotate(760deg); opacity: .1; }
+@keyframes confettiFall {
+    to {
+        transform: translateY(110vh) rotate(720deg);
+        opacity: .15;
+    }
 }
 
-.footer {
-    margin-top: 32px;
-    color: #a783a4;
-    font-size: 11px;
-    letter-spacing: 2px;
-    line-height: 2;
+.twinkle {
+    animation: twinkle 1.6s ease-in-out infinite alternate;
 }
 
-@media (max-width: 480px) {
-    .page { padding: 24px 10px 35px; }
-    .card { padding: 23px 15px; }
-    button { padding: 12px 16px; }
+@keyframes twinkle {
+    from { opacity: .5; }
+    to { opacity: 1; }
+}
+
+@media(max-width: 480px) {
+    .site { padding: 25px 11px; }
+    .card { padding: 22px 15px; }
+    .wish { font-size: 14px; }
+    button { padding: 12px 15px; }
 }
 </style>
 </head>
 
 <body>
-<div class="page">
+<div class="site">
+<div class="glow one"></div>
+<div class="glow two"></div>
 
-    <div class="decor">✧ ♡ ✧</div>
-    <div class="pill">A LITTLE SURPRISE FOR YOU</div>
+<div class="content">
 
-    <h1>Hey, Muskan! 💗</h1>
+    <div class="topline">A SPECIAL LITTLE SURPRISE</div>
+    <h1>It's your moment,<br>Muskan.</h1>
+
     <p class="subtitle">
-        Someone has made a little corner of the internet
-        just to celebrate YOU. 🌷
+        One little page, a thousand good wishes,
+        and a whole lot of love for your special day. ✨
     </p>
 
-    <div class="photo-wrap">PHOTO_SECTION</div>
+    <div class="portrait-wrap">
+        <img class="portrait" src="PHOTO_SOURCE" alt="Muskan">
+    </div>
+    <div class="photo-caption">THE WORLD IS A LITTLE BRIGHTER WITH YOU IN IT</div>
 
     <div class="card" id="intro">
-        <div style="font-size:48px">🎁</div>
-        <h2>Ready for your surprise?</h2>
-        <p class="message">
-            There's a little birthday magic waiting for you.<br>
-            This moment is all yours. 💌
+        <div class="gift">🎁</div>
+        <h2>Something special awaits...</h2>
+        <p class="wish">
+            I made this little surprise just for you.<br>
+            Ready to open it? 💌
         </p>
-        <button onclick="openSurprise()">Open Your Surprise ✨</button>
+        <button onclick="openSurprise()">Open your surprise ✨</button>
     </div>
 
     <div id="surprise">
-        <div class="decor">🎈 ✨ 🎈</div>
 
         <div class="card">
+            <div class="twinkle">✦ ✧ ✦</div>
             <h2>Happy Birthday,<br>Muskan! 🎂</h2>
-            <p class="message">
+
+            <p class="wish">
                 Today is about celebrating the wonderful person you are. 💕<br><br>
 
                 May your life be filled with genuine smiles,
@@ -284,18 +368,40 @@ button:hover { transform: translateY(-3px) scale(1.02); }
                 to your face today. 💗
             </p>
 
-            <h2 style="font-size:29px">Lots of wishes,<br>Sandy 💖</h2>
+            <h2 style="font-size:30px">
+                Lots of wishes,<br>Sandy 💖
+            </h2>
         </div>
 
         <div class="card">
-            <h2 style="font-size:30px">A little birthday magic ✨</h2>
-            <p class="message">
-                Make a wish, close your eyes for a moment,
-                and imagine all the lovely things waiting for you. 🌙
+            <h2>A cake made for your day 🎂</h2>
+            <p class="wish">
+                Every birthday deserves a little sweetness.
             </p>
 
-            <div class="gift" onclick="celebrate()">🎂</div>
-            <p class="message">Tap the cake for more birthday magic!</p>
+            <div class="cake-frame">
+                <img class="cake" src="CAKE_SOURCE" alt="Birthday cake"
+                     onerror="this.style.display='none';document.getElementById('cakeFallback').style.display='block';">
+            </div>
+            <div id="cakeFallback" style="display:none;color:#ffd4ed;padding:20px">
+                The cake photo couldn't load. Please check your internet connection.
+            </div>
+
+            <div class="cake-name">Made for Muskan ✨</div>
+            <p class="cake-note">
+                Imagine the candles glowing, your favourite people cheering,
+                and one beautiful wish coming true. 💗
+            </p>
+
+            <button onclick="blowCandles()">Make a wish & blow the candles 🕯️</button>
+            <p id="candleMessage" class="wish"></p>
+        </div>
+
+        <div class="card">
+            <h2>Let's celebrate you ✨</h2>
+            <p class="wish">
+                A little happiness, a virtual hug, and a sky full of wishes.
+            </p>
 
             <button onclick="celebrate()">More confetti! 🎉</button>
             <button class="secondary" onclick="hug()">Send a virtual hug 🤗</button>
@@ -304,8 +410,9 @@ button:hover { transform: translateY(-3px) scale(1.02); }
                 ▶ Play birthday music 🎵
             </button>
 
-            <p id="reaction" aria-live="polite"></p>
+            <p id="response" aria-live="polite"></p>
         </div>
+
     </div>
 
     <div class="footer">
@@ -313,82 +420,70 @@ button:hover { transform: translateY(-3px) scale(1.02); }
         A LITTLE BIRTHDAY MEMORY TO KEEP
     </div>
 </div>
-
-MUSIC_SECTION
+</div>
 
 <script>
 let musicPlaying = false;
 
-function confettiBurst() {
-    const symbols = ["💗", "💕", "✨", "🌸", "🎉", "💖", "🎈"];
-    for (let i = 0; i < 45; i++) {
-        const item = document.createElement("span");
-        item.className = "confetti";
-        item.textContent = symbols[Math.floor(Math.random() * symbols.length)];
-        item.style.left = Math.random() * 100 + "vw";
-        item.style.animationDelay = Math.random() * 1.2 + "s";
-        item.style.fontSize = (16 + Math.random() * 17) + "px";
-        document.body.appendChild(item);
-        setTimeout(() => item.remove(), 5000);
+function burst() {
+    const symbols = ["💗", "✨", "🌸", "🎉", "💖", "🎊", "🎈", "✦"];
+    for (let i = 0; i < 65; i++) {
+        const el = document.createElement("span");
+        el.className = "confetti";
+        el.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        el.style.left = Math.random() * 100 + "vw";
+        el.style.animationDelay = Math.random() * 1.5 + "s";
+        el.style.fontSize = (14 + Math.random() * 20) + "px";
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 5000);
     }
 }
 
 function openSurprise() {
     document.getElementById("intro").style.display = "none";
     document.getElementById("surprise").style.display = "block";
-    confettiBurst();
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    burst();
+    setTimeout(() => {
+        document.getElementById("surprise").scrollIntoView({
+            behavior: "smooth", block: "start"
+        });
+    }, 100);
 }
 
 function celebrate() {
-    confettiBurst();
-    document.getElementById("reaction").textContent =
-        "Yayyy, Muskan! 🎉 Sending you a sky full of happiness! 💗";
+    burst();
+    document.getElementById("response").textContent =
+        "A whole sky of happiness, just for you, Muskan! 🎉💗";
 }
 
 function hug() {
-    document.getElementById("reaction").textContent =
-        "Big virtual hug from Sandy! 🤗💗 Consider yourself hugged!";
-    confettiBurst();
+    document.getElementById("response").textContent =
+        "Sending you the biggest virtual hug from Sandy! 🤗💖";
+    burst();
 }
 
 function wish() {
-    document.getElementById("reaction").textContent =
-        "✨ Wish made! May something beautiful find its way to you. 🌷💖";
-    confettiBurst();
+    document.getElementById("response").textContent =
+        "Wish made! May your heart's sweetest wish come true. 🌟";
+    burst();
 }
 
-async function toggleMusic() {
-    const audio = document.getElementById("birthdaySong");
-    const button = document.getElementById("musicButton");
+function blowCandles() {
+    document.getElementById("candleMessage").textContent =
+        "✨ Candles blown! Keep your wish in your heart, Muskan. May it come true! 💗";
+    burst();
+}
 
-    if (!audio.getAttribute("src")) {
-        document.getElementById("reaction").textContent =
-            "Add a music file named birthday_song.mp3 to the app folder to enable music. 🎵";
-        return;
-    }
-
-    try {
-        if (!musicPlaying) {
-            await audio.play();
-            musicPlaying = true;
-            button.textContent = "❚❚ Pause birthday music 🎵";
-        } else {
-            audio.pause();
-            musicPlaying = false;
-            button.textContent = "▶ Play birthday music 🎵";
-        }
-    } catch (error) {
-        document.getElementById("reaction").textContent =
-            "Tap Play again to start the music. 🎵";
-    }
+function toggleMusic() {
+    document.getElementById("response").textContent =
+        "To enable music, add your chosen song file to the page and connect the audio player. 🎵";
 }
 </script>
 </body>
 </html>
 """
 
-page = page.replace("PHOTO_SECTION", photo_section)
-page = page.replace("MUSIC_SECTION", music_section)
+page = page.replace("PHOTO_SOURCE", photo_src)
+page = page.replace("CAKE_SOURCE", cake_src)
 
-components.html(page, height=1700, scrolling=True)
+components.html(page, height=2600, scrolling=True)
