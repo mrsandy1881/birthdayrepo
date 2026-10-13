@@ -11,7 +11,7 @@ st.set_page_config(
 )
 
 # ---------------------------------
-# LOAD ASSETS (PHOTO, CAKE, MUSIC)
+# LOAD ASSETS (PHOTO, CAKE)
 # ---------------------------------
 def load_image(path):
     if os.path.exists(path):
@@ -25,14 +25,6 @@ def load_image(path):
 photo_src = load_image("muskan.jpg")
 cake_src = load_image("muskan_cake.jpg")
 
-music_path = "birthday_song.mp3"
-if os.path.exists(music_path):
-    with open(music_path, "rb") as f:
-        music_data = base64.b64encode(f.read()).decode("utf-8")
-    audio_src = f"data:audio/mpeg;base64,{music_data}"
-else:
-    audio_src = ""
-
 photo_section = (
     f'<img class="portrait" src="{photo_src}" alt="Muskan">'
     if photo_src
@@ -45,18 +37,12 @@ cake_section = (
     else '<div class="photo-placeholder">🎂<br>Add cake image as muskan_cake.jpg</div>'
 )
 
-music_section = (
-    f'<audio id="birthdaySong" loop src="{audio_src}"></audio>'
-    if audio_src
-    else '<audio id="birthdaySong"></audio>'
-)
-
 page = """
 <!DOCTYPE html>
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="https://fonts.googleapis.com/css2?family=Sacramento&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; }
 
@@ -87,16 +73,17 @@ body {
     padding: 9px 16px;
     font-size: 11px;
     letter-spacing: 2px;
+    font-weight: 600;
     color: #a14e84;
 }
 
 h1 {
-    font-family: 'Sacramento', cursive;
-    font-size: clamp(55px, 11vw, 95px);
-    margin: 10px 0 12px;
-    line-height: 1.1;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
+    font-size: clamp(38px, 8vw, 65px);
+    margin: 15px 0 12px;
+    line-height: 1.2;
     color: #9c3f7c;
-    font-weight: normal;
 }
 
 .subtitle {
@@ -105,6 +92,7 @@ h1 {
     line-height: 1.8;
     color: #936c90;
     font-size: 15px;
+    font-weight: 500;
 }
 
 .decor {
@@ -167,18 +155,19 @@ h1 {
 }
 
 h2 {
-    font-family: 'Sacramento', cursive;
-    font-size: clamp(40px, 8vw, 60px);
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
+    font-size: clamp(26px, 5vw, 36px);
     color: #9c3f7c;
-    line-height: 1.2;
+    line-height: 1.3;
     margin: 10px 0;
-    font-weight: normal;
 }
 
 .message {
     color: #795b78;
     font-size: 15px;
     line-height: 2;
+    font-weight: 500;
 }
 
 button {
@@ -188,7 +177,7 @@ button {
     padding: 13px 21px;
     margin: 7px 4px;
     font-size: 14px;
-    font-weight: bold;
+    font-weight: 600;
     color: white;
     background: linear-gradient(100deg, #df80b5, #a28ae5);
     box-shadow: 0 7px 17px #b576b62b;
@@ -217,7 +206,7 @@ button:hover { transform: translateY(-3px) scale(1.02); }
 #reaction {
     min-height: 30px;
     color: #a14e84;
-    font-weight: bold;
+    font-weight: 600;
     line-height: 1.7;
     margin-top: 15px;
 }
@@ -240,6 +229,7 @@ button:hover { transform: translateY(-3px) scale(1.02); }
     font-size: 11px;
     letter-spacing: 2px;
     line-height: 2;
+    font-weight: 600;
 }
 
 @media (max-width: 480px) {
@@ -296,7 +286,7 @@ button:hover { transform: translateY(-3px) scale(1.02); }
                 to your face today. 💗
             </p>
 
-            <h2 style="font-size:45px">Lots of wishes, Sandy 💖</h2>
+            <h2 style="font-size:28px">Lots of wishes, Sandy 💖</h2>
         </div>
 
         <div class="card">
@@ -314,9 +304,6 @@ button:hover { transform: translateY(-3px) scale(1.02); }
             <button onclick="celebrate()">More confetti! 🎉</button>
             <button class="secondary" onclick="hug()">Send a virtual hug 🤗</button>
             <button class="secondary" onclick="wish()">Make a wish 🌟</button>
-            <button class="secondary" onclick="toggleMusic()" id="musicButton">
-                ▶ Play birthday music 🎵
-            </button>
 
             <p id="reaction" aria-live="polite"></p>
         </div>
@@ -328,11 +315,7 @@ button:hover { transform: translateY(-3px) scale(1.02); }
     </div>
 </div>
 
-MUSIC_SECTION
-
 <script>
-let musicPlaying = false;
-
 function confettiBurst() {
     const symbols = ["💗", "💕", "✨", "🌸", "🎉", "💖", "🎈"];
     for (let i = 0; i < 45; i++) {
@@ -371,32 +354,6 @@ function wish() {
         "✨ Wish made! May something beautiful find its way to you. 🌷💖";
     confettiBurst();
 }
-
-async function toggleMusic() {
-    const audio = document.getElementById("birthdaySong");
-    const button = document.getElementById("musicButton");
-
-    if (!audio.getAttribute("src")) {
-        document.getElementById("reaction").textContent =
-            "Add a music file named birthday_song.mp3 to the app folder to enable music. 🎵";
-        return;
-    }
-
-    try {
-        if (!musicPlaying) {
-            await audio.play();
-            musicPlaying = true;
-            button.textContent = "❚❚ Pause birthday music 🎵";
-        } else {
-            audio.pause();
-            musicPlaying = false;
-            button.textContent = "▶ Play birthday music 🎵";
-        }
-    } catch (error) {
-        document.getElementById("reaction").textContent =
-            "Tap Play again to start the music. 🎵";
-    }
-}
 </script>
 </body>
 </html>
@@ -404,6 +361,5 @@ async function toggleMusic() {
 
 page = page.replace("PHOTO_SECTION", photo_section)
 page = page.replace("CAKE_SECTION", cake_section)
-page = page.replace("MUSIC_SECTION", music_section)
 
-components.html(page, height=1850, scrolling=True)
+components.html(page, height=1750, scrolling=True)
