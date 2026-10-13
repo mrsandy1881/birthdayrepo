@@ -49,83 +49,6 @@ cake_section = (
 )
 
 # ---------------------------------
-# CONTENT SECTIONS (LOCKED vs UNLOCKED)
-# ---------------------------------
-if not is_unlocked:
-    surprise_content = """
-    <div class="card" id="lock-card">
-        <div style="font-size:48px">🔒 ✨</div>
-        <h2>Locked Until 12:00 AM Midnight</h2>
-        <p class="message">
-            Shhh! Your 21st birthday surprise is safely locked inside.<br>
-            It will automatically open right when the clock strikes 12:00 AM! 🌙
-        </p>
-        
-        <div class="countdown-grid">
-            <div class="time-box">
-                <div class="time-number" id="days">00</div>
-                <div class="time-label">DAYS</div>
-            </div>
-            <div class="time-box">
-                <div class="time-number" id="hours">00</div>
-                <div class="time-label">HOURS</div>
-            </div>
-            <div class="time-box">
-                <div class="time-number" id="minutes">00</div>
-                <div class="time-label">MINS</div>
-            </div>
-            <div class="time-box">
-                <div class="time-number" id="seconds">00</div>
-                <div class="time-label">SECS</div>
-            </div>
-        </div>
-        <p style="font-size: 13px; color: #a14e84; font-weight: 600; margin-top: 15px;">
-            ⏳ Please wait until midnight... Page will auto-unlock!
-        </p>
-    </div>
-    """
-else:
-    surprise_content = """
-    <div id="surprise">
-        <div class="decor">🎈 ✨ 🎈</div>
-
-        <div class="card">
-            <h2>Cheers to 21 Years, Muskan! 🎂</h2>
-            <p class="message">
-                Happy 21st Birthday! Turning 21 is a huge milestone, and today is all about celebrating the incredible person you've become. 💕<br><br>
-
-                May your 21st year be filled with unforgettable adventures, genuine smiles, beautiful memories, exciting opportunities, and people who remind you how truly special you are. 🌸<br><br>
-
-                Keep dreaming big, laughing out loud, and shining your bright light everywhere you go. You deserve all the happiness in the world! ✨<br><br>
-
-                I'm so lucky to have you as my friend. I hope this little surprise brings the biggest smile to your face today. 💗
-            </p>
-
-            <h2 style="font-size:28px">Lots of love, Sandy 💖</h2>
-        </div>
-
-        <div class="card">
-            <h2>A little 21st birthday magic ✨</h2>
-            <p class="message">
-                Make a wish for your 21st year, close your eyes for a moment,
-                and imagine all the wonderful things coming your way. 🌙<br>
-                <b>Tap your custom birthday cake below!</b>
-            </p>
-
-            <div class="cake-wrap" onclick="celebrate()">
-                CAKE_SECTION
-            </div>
-
-            <button onclick="celebrate()">More confetti! 🎉</button>
-            <button class="secondary" onclick="hug()">Send a virtual hug 🤗</button>
-            <button class="secondary" onclick="wish()">Make a wish 🌟</button>
-
-            <p id="reaction" aria-live="polite"></p>
-        </div>
-    </div>
-    """
-
-# ---------------------------------
 # HTML & CSS PAGE TEMPLATE
 # ---------------------------------
 page = """
@@ -327,6 +250,19 @@ button:hover { transform: translateY(-3px) scale(1.02); }
     margin-top: 4px;
 }
 
+#lock-card, #open-card, #surprise {
+    display: none;
+}
+
+@keyframes appear {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+#surprise {
+    animation: appear .8s ease;
+}
+
 #reaction {
     min-height: 30px;
     color: #a14e84;
@@ -376,11 +312,89 @@ button:hover { transform: translateY(-3px) scale(1.02); }
         Here is a little corner of the internet made just to celebrate YOU. 🌷
     </p>
 
-    <!-- Animated Neon Instagram Photo Frame -->
-    <div class="photo-wrap">PHOTO_SECTION</div>
+    <!-- HIDDEN PHOTO WRAP (Revealed only when surprise opens) -->
+    <div class="photo-wrap" id="photo-container" style="display: none;">
+        PHOTO_SECTION
+    </div>
 
-    <!-- DYNAMIC SURPRISE / LOCK SECTION -->
-    SURPRISE_CONTENT
+    <!-- 1. LOCKED COUNTDOWN CARD (Shown before 12 AM) -->
+    <div class="card" id="lock-card">
+        <div style="font-size:48px">🔒 ✨</div>
+        <h2>Waiting for 12:00 AM Midnight...</h2>
+        <p class="message">
+            Shhh! Your 21st birthday surprise is safely locked inside.<br>
+            The countdown is on. Come back when the clock strikes 12! 🌙
+        </p>
+        
+        <div class="countdown-grid">
+            <div class="time-box">
+                <div class="time-number" id="days">00</div>
+                <div class="time-label">DAYS</div>
+            </div>
+            <div class="time-box">
+                <div class="time-number" id="hours">00</div>
+                <div class="time-label">HOURS</div>
+            </div>
+            <div class="time-box">
+                <div class="time-number" id="minutes">00</div>
+                <div class="time-label">MINS</div>
+            </div>
+            <div class="time-box">
+                <div class="time-number" id="seconds">00</div>
+                <div class="time-label">SECS</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. OPEN SURPRISE CARD (Shown after 12 AM before clicking) -->
+    <div class="card" id="open-card">
+        <div style="font-size:48px">🎁</div>
+        <h2>It's Time! Ready for your 21st surprise?</h2>
+        <p class="message">
+            The clock has struck midnight! Your special milestone moment is waiting.<br>
+            Let's make this birthday unforgettable! 💌
+        </p>
+        <button onclick="openSurprise()">Open Your Surprise ✨</button>
+    </div>
+
+    <!-- 3. FULL UNLOCKED SURPRISE CONTENT (Shown after clicking open) -->
+    <div id="surprise">
+        <div class="decor">🎈 ✨ 🎈</div>
+
+        <div class="card">
+            <h2>Cheers to 21 Years, Muskan! 🎂</h2>
+            <p class="message">
+                Happy 21st Birthday! Turning 21 is a huge milestone, and today is all about celebrating the incredible person you've become. 💕<br><br>
+
+                May your 21st year be filled with unforgettable adventures, genuine smiles, beautiful memories, exciting opportunities, and people who remind you how truly special you are. 🌸<br><br>
+
+                Keep dreaming big, laughing out loud, and shining your bright light everywhere you go. You deserve all the happiness in the world! ✨<br><br>
+
+                I'm so lucky to have you as my friend. I hope this little surprise brings the biggest smile to your face today. 💗
+            </p>
+
+            <h2 style="font-size:28px">Lots of love, Sandy 💖</h2>
+        </div>
+
+        <div class="card">
+            <h2>A little 21st birthday magic ✨</h2>
+            <p class="message">
+                Make a wish for your 21st year, close your eyes for a moment,
+                and imagine all the wonderful things coming your way. 🌙<br>
+                <b>Tap your custom birthday cake below!</b>
+            </p>
+
+            <div class="cake-wrap" onclick="celebrate()">
+                CAKE_SECTION
+            </div>
+
+            <button onclick="celebrate()">More confetti! 🎉</button>
+            <button class="secondary" onclick="hug()">Send a virtual hug 🤗</button>
+            <button class="secondary" onclick="wish()">Make a wish 🌟</button>
+
+            <p id="reaction" aria-live="polite"></p>
+        </div>
+    </div>
 
     <div class="footer">
         MADE WITH 💗 BY SANDY<br>
@@ -390,7 +404,22 @@ button:hover { transform: translateY(-3px) scale(1.02); }
 
 <script>
 const targetDate = new Date("TARGET_DATE_STR").getTime();
-const isUnlocked = IS_UNLOCKED_BOOL;
+let isUnlocked = IS_UNLOCKED_BOOL;
+
+function checkState() {
+    const now = new Date().getTime();
+    const distance = targetDate - now;
+
+    if (distance <= 0 || isUnlocked) {
+        // Past midnight: Show the "Open Surprise" button card, hide countdown
+        document.getElementById("lock-card").style.display = "none";
+        document.getElementById("open-card").style.display = "block";
+    } else {
+        // Before midnight: Show countdown card, hide open button
+        document.getElementById("lock-card").style.display = "block";
+        document.getElementById("open-card").style.display = "none";
+    }
+}
 
 function confettiBurst() {
     const symbols = ["💗", "💕", "✨", "🌸", "🎉", "💖", "🎈", "🥂"];
@@ -406,21 +435,22 @@ function confettiBurst() {
     }
 }
 
-if (isUnlocked) {
-    window.addEventListener('DOMContentLoaded', () => {
-        confettiBurst();
-    });
+function openSurprise() {
+    // Hide the open button card, reveal photo and full surprise content!
+    document.getElementById("open-card").style.display = "none";
+    document.getElementById("photo-container").style.display = "block";
+    document.getElementById("surprise").style.display = "block";
+    confettiBurst();
+    window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 function updateCountdown() {
-    const daysElem = document.getElementById("days");
-    if (!daysElem) return;
-
     const now = new Date().getTime();
     const distance = targetDate - now;
 
     if (distance <= 0) {
-        window.location.reload();
+        isUnlocked = true;
+        checkState();
         return;
     }
 
@@ -429,14 +459,18 @@ function updateCountdown() {
     const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-    document.getElementById("days").textContent = String(days).padStart(2, '0');
-    document.getElementById("hours").textContent = String(hours).padStart(2, '0');
-    document.getElementById("minutes").textContent = String(minutes).padStart(2, '0');
-    document.getElementById("seconds").textContent = String(seconds).padStart(2, '0');
+    const daysElem = document.getElementById("days");
+    if (daysElem) {
+        daysElem.textContent = String(days).padStart(2, '0');
+        document.getElementById("hours").textContent = String(hours).padStart(2, '0');
+        document.getElementById("minutes").textContent = String(minutes).padStart(2, '0');
+        document.getElementById("seconds").textContent = String(seconds).padStart(2, '0');
+    }
 }
 
+// Initial state check
+checkState();
 setInterval(updateCountdown, 1000);
-updateCountdown();
 
 function celebrate() {
     confettiBurst();
@@ -466,7 +500,6 @@ target_str = BIRTHDAY_TARGET.strftime("%Y-%m-%dT%H:%M:%S")
 # Inject placeholders safely
 page = page.replace("PHOTO_SECTION", photo_section)
 page = page.replace("CAKE_SECTION", cake_section)
-page = page.replace("SURPRISE_CONTENT", surprise_content)
 page = page.replace("TARGET_DATE_STR", target_str)
 page = page.replace("IS_UNLOCKED_BOOL", "true" if is_unlocked else "false")
 
