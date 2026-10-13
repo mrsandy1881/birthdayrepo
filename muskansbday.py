@@ -42,7 +42,7 @@ photo_section = (
 cake_section = (
     f'<img class="cake-portrait" src="{cake_src}" alt="Muskan’s Birthday Cake">'
     if cake_src
-    else '<div class="photo-placeholder">🎂<br>Add AI cake image as muskan_cake.jpg</div>'
+    else '<div class="photo-placeholder">🎂<br>Add cake image as muskan_cake.jpg</div>'
 )
 
 music_section = (
