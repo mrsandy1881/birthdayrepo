@@ -37,6 +37,12 @@ cake_section = (
     else '<div class="photo-placeholder">🎂<br>Add cake image as muskan_cake.jpg</div>'
 )
 
+# ---------------------------------
+# SET BIRTHDAY TARGET TIME (Modify as needed)
+# Format: YYYY-MM-DDTHH:MM:SS
+# ---------------------------------
+BIRTHDAY_TARGET = "2026-10-15T00:00:00"  # Set to Muskan's birthday midnight date
+
 page = """
 <!DOCTYPE html>
 <html>
@@ -105,7 +111,7 @@ h1 {
     to { transform: translateY(-8px); }
 }
 
-/* Trending Instagram-style Glowing Neon Animated Photo Frame */
+/* Glowing Neon Animated Photo Frame */
 .photo-wrap {
     max-width: 340px;
     margin: 22px auto;
@@ -207,6 +213,37 @@ button:hover { transform: translateY(-3px) scale(1.02); }
     border: 1px solid #edc5df;
 }
 
+/* Countdown Grid Styling */
+.countdown-grid {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.time-box {
+    background: #fff0f6;
+    border: 1px solid #edc1dc;
+    padding: 12px 15px;
+    border-radius: 16px;
+    min-width: 70px;
+    box-shadow: 0 4px 15px rgba(156, 63, 124, 0.08);
+}
+
+.time-number {
+    font-size: 24px;
+    font-weight: 700;
+    color: #9c3f7c;
+}
+
+.time-label {
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: #a783a4;
+    font-weight: 600;
+    margin-top: 4px;
+}
+
 #surprise {
     display: none;
     animation: appear .8s ease;
@@ -266,19 +303,39 @@ button:hover { transform: translateY(-3px) scale(1.02); }
         Here is a little corner of the internet made just to celebrate YOU. 🌷
     </p>
 
-    <!-- Trending Animated Neon Instagram Photo Frame -->
+    <!-- Animated Neon Instagram Photo Frame -->
     <div class="photo-wrap">PHOTO_SECTION</div>
 
-    <div class="card" id="intro">
-        <div style="font-size:48px">🎁</div>
-        <h2>Ready for your 21st surprise?</h2>
+    <!-- COUNTDOWN / LOCK CARD -->
+    <div class="card" id="lock-card">
+        <div style="font-size:48px">⏳</div>
+        <h2>Waiting for 12:00 AM...</h2>
         <p class="message">
-            Your special milestone moment is waiting.<br>
-            Let's make this birthday unforgettable! 💌
+            The grand 21st birthday surprise unlocks automatically right when the clock strikes midnight! ✨<br>
+            Stay right here, the magic is loading... 🌙
         </p>
-        <button onclick="openSurprise()">Open Your Surprise ✨</button>
+        
+        <div class="countdown-grid">
+            <div class="time-box">
+                <div class="time-number" id="days">00</div>
+                <div class="time-label">DAYS</div>
+            </div>
+            <div class="time-box">
+                <div class="time-number" id="hours">00</div>
+                <div class="time-label">HOURS</div>
+            </div>
+            <div class="time-box">
+                <div class="time-number" id="minutes">00</div>
+                <div class="time-label">MINS</div>
+            </div>
+            <div class="time-box">
+                <div class="time-number" id="seconds">00</div>
+                <div class="time-label">SECS</div>
+            </div>
+        </div>
     </div>
 
+    <!-- UNLOCKED SURPRISE CONTENT -->
     <div id="surprise">
         <div class="decor">🎈 ✨ 🎈</div>
 
@@ -324,6 +381,9 @@ button:hover { transform: translateY(-3px) scale(1.02); }
 </div>
 
 <script>
+const targetDate = new Date("TARGET_DATE_HERE").getTime();
+let unlocked = false;
+
 function confettiBurst() {
     const symbols = ["💗", "💕", "✨", "🌸", "🎉", "💖", "🎈", "🥂"];
     for (let i = 0; i < 45; i++) {
@@ -339,11 +399,41 @@ function confettiBurst() {
 }
 
 function openSurprise() {
-    document.getElementById("intro").style.display = "none";
-    document.getElementById("surprise").style.display = "block";
-    confettiBurst();
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (!unlocked) {
+        unlocked = true;
+        document.getElementById("lock-card").style.display = "none";
+        document.getElementById("surprise").style.display = "block";
+        confettiBurst();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }
 }
+
+function updateCountdown() {
+    const now = new Date().getTime();
+    const distance = targetDate - now;
+
+    if (distance <= 0) {
+        document.getElementById("days").textContent = "00";
+        document.getElementById("hours").textContent = "00";
+        document.getElementById("minutes").textContent = "00";
+        document.getElementById("seconds").textContent = "00";
+        openSurprise();
+        return;
+    }
+
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    document.getElementById("days").textContent = String(days).padStart(2, '0');
+    document.getElementById("hours").textContent = String(hours).padStart(2, '0');
+    document.getElementById("minutes").textContent = String(minutes).padStart(2, '0');
+    document.getElementById("seconds").textContent = String(seconds).padStart(2, '0');
+}
+
+setInterval(updateCountdown, 1000);
+updateCountdown();
 
 function celebrate() {
     confettiBurst();
@@ -367,7 +457,9 @@ function wish() {
 </html>
 """
 
+# Safe String Replacements
 page = page.replace("PHOTO_SECTION", photo_section)
 page = page.replace("CAKE_SECTION", cake_section)
+page = page.replace("TARGET_DATE_HERE", BIRTHDAY_TARGET)
 
 components.html(page, height=1750, scrolling=True)
