@@ -1,9 +1,8 @@
-
+```python
 import streamlit as st
 import streamlit.components.v1 as components
 import os
 import base64
-import html
 
 st.set_page_config(
     page_title="For Muskan 💗",
@@ -41,12 +40,18 @@ page = """
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Stylish fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Dancing+Script:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
 * { box-sizing: border-box; }
 
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
+    font-family: 'DM Sans', sans-serif;
     color: #713f68;
     background: transparent;
 }
@@ -75,11 +80,13 @@ body {
 }
 
 h1 {
-    font-family: Georgia, serif;
-    font-size: clamp(38px, 8vw, 66px);
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(48px, 9vw, 78px);
+    font-weight: 700;
     margin: 20px 0 12px;
-    line-height: 1.1;
+    line-height: 1.15;
     color: #a04d86;
+    text-shadow: 0 5px 20px #eab3d450;
 }
 
 .subtitle {
@@ -150,18 +157,20 @@ h1 {
     padding: 26px 20px;
     border-radius: 26px;
     border: 1px solid #edcce5;
-    background: #ffffffc9;
+    background: #ffffffd9;
     box-shadow: 0 10px 32px #9c699515;
 }
 
 h2 {
-    font-family: Georgia, serif;
-    font-size: clamp(28px, 6vw, 40px);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 6vw, 44px);
+    font-weight: 600;
     color: #a14e84;
-    line-height: 1.3;
+    line-height: 1.2;
 }
 
 .message {
+    font-family: 'DM Sans', sans-serif;
     color: #795b78;
     font-size: 15px;
     line-height: 2;
@@ -173,15 +182,19 @@ button {
     border-radius: 35px;
     padding: 13px 21px;
     margin: 7px 4px;
+    font-family: 'DM Sans', sans-serif;
     font-size: 14px;
-    font-weight: bold;
+    font-weight: 600;
     color: white;
     background: linear-gradient(100deg, #df80b5, #a28ae5);
     box-shadow: 0 7px 17px #b576b62b;
-    transition: transform .2s;
+    transition: transform .2s, box-shadow .2s;
 }
 
-button:hover { transform: translateY(-3px) scale(1.02); }
+button:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 10px 23px #b576b650;
+}
 
 .secondary {
     color: #98517f;
@@ -229,10 +242,10 @@ button:hover { transform: translateY(-3px) scale(1.02); }
 }
 
 .age-number {
-    font-family: Georgia, serif;
+    font-family: 'Cormorant Garamond', serif;
     font-size: clamp(90px, 20vw, 145px);
     line-height: 1;
-    font-weight: normal;
+    font-weight: 600;
     background: linear-gradient(135deg, #e58ab8, #a28ae5);
     -webkit-background-clip: text;
     background-clip: text;
@@ -242,14 +255,15 @@ button:hover { transform: translateY(-3px) scale(1.02); }
 }
 
 .chapter-card h2 {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(34px, 7vw, 48px);
     margin-top: 8px;
 }
 
 .chapter-signature {
     margin-top: 18px;
-    font-family: Georgia, serif;
-    font-style: italic;
-    font-size: 17px;
+    font-family: 'Dancing Script', cursive;
+    font-size: 25px;
     color: #ad6795;
 }
 
@@ -262,6 +276,200 @@ button:hover { transform: translateY(-3px) scale(1.02); }
         opacity: 1;
         transform: translateY(0) scale(1);
     }
+}
+
+/* ---------------------------------
+   CSS BIRTHDAY CAKE
+   No external image required
+--------------------------------- */
+.cake-scene {
+    position: relative;
+    width: min(100%, 350px);
+    height: 290px;
+    margin: 22px auto 10px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 26px;
+    animation: cakeFloat 3s ease-in-out infinite;
+}
+
+@keyframes cakeFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+}
+
+.cake-shadow {
+    position: absolute;
+    bottom: 17px;
+    width: 270px;
+    height: 24px;
+    background: #a76a9c25;
+    border-radius: 50%;
+    filter: blur(7px);
+}
+
+.cake-plate {
+    position: absolute;
+    bottom: 18px;
+    width: 290px;
+    height: 22px;
+    border-radius: 50%;
+    background: linear-gradient(180deg, #fff, #e7d7ed 65%, #cdb8d8);
+    border: 2px solid #ead8ed;
+    box-shadow: 0 6px 8px #91618d20;
+}
+
+.cake-base {
+    position: absolute;
+    bottom: 38px;
+    width: 240px;
+    height: 91px;
+    border-radius: 15px 15px 22px 22px;
+    background: linear-gradient(90deg, #d96fa7, #f5b8d5 28%, #ffe1ed 52%, #e99bc6 82%, #c9619c);
+    box-shadow: inset 0 -10px 0 #c65c95, inset 0 8px 0 #fff0f7;
+    border-bottom: 5px solid #c65c95;
+}
+
+.cake-base::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 19px;
+    border-radius: 50%;
+    background: linear-gradient(90deg, #fff0f8, #fffafd, #f5c7e1);
+}
+
+.cake-top {
+    position: absolute;
+    bottom: 121px;
+    width: 240px;
+    height: 43px;
+    border-radius: 50%;
+    background: linear-gradient(160deg, #fff9fd, #f9d8eb 75%, #eaa8ce);
+    border: 2px solid #f7cde4;
+    box-shadow: 0 5px 8px #a95d9130;
+}
+
+.cake-top::after {
+    content: "";
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    top: 8px;
+    height: 10px;
+    border-radius: 50%;
+    border-top: 3px dotted #dfa0c5;
+}
+
+.cake-drip {
+    position: absolute;
+    z-index: 2;
+    bottom: 100px;
+    width: 240px;
+    height: 30px;
+    background: #f9d8eb;
+    border-radius: 0 0 15px 15px;
+    clip-path: polygon(0 0,100% 0,100% 45%,94% 45%,92% 100%,86% 100%,83% 45%,72% 45%,69% 78%,63% 78%,60% 45%,45% 45%,42% 100%,36% 100%,33% 45%,20% 45%,17% 75%,11% 75%,9% 45%,0 45%);
+}
+
+.cake-ribbon {
+    position: absolute;
+    z-index: 3;
+    bottom: 64px;
+    width: 240px;
+    height: 8px;
+    background: linear-gradient(90deg, #b94d8a, #f3a7d0, #b94d8a);
+    box-shadow: 0 2px 3px #9c3c7d25;
+}
+
+.cake-name {
+    position: absolute;
+    z-index: 5;
+    bottom: 72px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 178px;
+    padding: 5px 3px 7px;
+    border-radius: 12px;
+    background: linear-gradient(145deg, #fff9fc, #ffe8f4);
+    border: 1px solid #e9b2d2;
+    color: #a3447f;
+    font-family: 'Dancing Script', cursive;
+    font-size: 28px;
+    font-weight: 700;
+    text-shadow: 0 1px #fff;
+    box-shadow: 0 3px 8px #9c467a22;
+}
+
+.candle {
+    position: absolute;
+    z-index: 6;
+    bottom: 158px;
+    width: 10px;
+    height: 43px;
+    border-radius: 4px 4px 2px 2px;
+    background: repeating-linear-gradient(
+        135deg, #fff9ff 0px, #fff9ff 5px,
+        #dca5ed 5px, #dca5ed 9px
+    );
+    box-shadow: 0 2px 4px #a55a9c20;
+}
+
+.candle.one { left: calc(50% - 28px); }
+.candle.two { left: calc(50% + 18px); }
+
+.flame {
+    position: absolute;
+    left: 1px;
+    top: -19px;
+    width: 8px;
+    height: 16px;
+    border-radius: 70% 30% 65% 35%;
+    transform: rotate(45deg);
+    background: linear-gradient(135deg, #fff6a3, #ff9b45 75%);
+    box-shadow: 0 0 12px #ffc46b, 0 0 22px #ffb3d8;
+    transform-origin: bottom center;
+    animation: flicker .65s infinite alternate;
+}
+
+@keyframes flicker {
+    from { transform: rotate(40deg) scale(.9); }
+    to { transform: rotate(52deg) scale(1.08); }
+}
+
+.cake-pearl {
+    position: absolute;
+    z-index: 4;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #fff9fd;
+    box-shadow: 0 0 3px #d98eb8;
+}
+
+.pearl1 { left: 66px; bottom: 49px; }
+.pearl2 { left: 91px; bottom: 49px; }
+.pearl3 { right: 91px; bottom: 49px; }
+.pearl4 { right: 66px; bottom: 49px; }
+
+.cake-sparkle {
+    position: absolute;
+    color: #c78bb5;
+    font-size: 21px;
+    animation: sparkle 1.8s infinite alternate;
+}
+
+.sparkle1 { top: 25px; left: 23px; }
+.sparkle2 { top: 55px; right: 22px; animation-delay: .5s; }
+.sparkle3 { top: 105px; left: 42px; animation-delay: .8s; }
+.sparkle4 { top: 110px; right: 40px; animation-delay: .3s; }
+
+@keyframes sparkle {
+    from { opacity: .45; transform: scale(.8) rotate(0); }
+    to { opacity: 1; transform: scale(1.2) rotate(18deg); }
 }
 
 #reaction {
@@ -299,6 +507,7 @@ button:hover { transform: translateY(-3px) scale(1.02); }
     .card { padding: 23px 15px; }
     button { padding: 12px 16px; }
     .age-number { font-size: 100px; }
+    .cake-scene { transform: scale(.94); transform-origin: bottom center; }
 }
 </style>
 </head>
@@ -350,7 +559,7 @@ button:hover { transform: translateY(-3px) scale(1.02); }
         </div>
 
         <div class="card">
-            <h2>Happy Birthday,<br>Muskan! 🎂</h2>
+            <h2>Happy Birthday,<br>Muskan! 💗</h2>
             <p class="message">
                 Today is about celebrating the wonderful person you are. 💕<br><br>
 
@@ -368,18 +577,42 @@ button:hover { transform: translateY(-3px) scale(1.02); }
                 to your face today. 💗
             </p>
 
-            <h2 style="font-size:29px">Lots of wishes,<br>Sandy 💖</h2>
+            <h2 style="font-size:36px">Lots of wishes,<br><span style="font-family:'Dancing Script',cursive">Sandy 💖</span></h2>
         </div>
 
         <div class="card">
-            <h2 style="font-size:30px">A little birthday magic ✨</h2>
+            <h2 style="font-size:36px">A little birthday magic ✨</h2>
             <p class="message">
                 Make a wish, close your eyes for a moment,
                 and imagine all the lovely things waiting for you. 🌙
             </p>
 
-            <div class="gift" onclick="celebrate()">🎂</div>
-            <p class="message">Tap the cake for more birthday magic!</p>
+            <!-- Decorative CSS cake with Muskan's name -->
+            <div class="cake-scene" onclick="celebrate()" role="button" tabindex="0" aria-label="Tap Muskan's birthday cake">
+                <span class="cake-sparkle sparkle1">✧</span>
+                <span class="cake-sparkle sparkle2">✦</span>
+                <span class="cake-sparkle sparkle3">✧</span>
+                <span class="cake-sparkle sparkle4">✦</span>
+
+                <div class="cake-shadow"></div>
+                <div class="cake-plate"></div>
+                <div class="cake-base"></div>
+                <div class="cake-top"></div>
+                <div class="cake-drip"></div>
+                <div class="cake-ribbon"></div>
+
+                <div class="cake-name">Muskan</div>
+
+                <div class="candle one"><span class="flame"></span></div>
+                <div class="candle two"><span class="flame"></span></div>
+
+                <span class="cake-pearl pearl1"></span>
+                <span class="cake-pearl pearl2"></span>
+                <span class="cake-pearl pearl3"></span>
+                <span class="cake-pearl pearl4"></span>
+            </div>
+
+            <p class="message">A special cake for a special girl. ♡<br>Tap the cake for more birthday magic!</p>
 
             <button onclick="celebrate()">More confetti! 🎉</button>
             <button class="secondary" onclick="hug()">Send a virtual hug 🤗</button>
@@ -453,4 +686,5 @@ function wish() {
 
 page = page.replace("PHOTO_SECTION", photo_section)
 
-components.html(page, height=2100, scrolling=True)
+components.html(page, height=2600, scrolling=True)
+```
