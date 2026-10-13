@@ -42,7 +42,7 @@ page = """
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Sacramento&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; }
 
@@ -78,11 +78,11 @@ body {
 }
 
 h1 {
-    font-family: 'Quicksand', sans-serif;
-    font-weight: 700;
-    font-size: clamp(38px, 8vw, 65px);
-    margin: 15px 0 12px;
-    line-height: 1.2;
+    font-family: 'Sacramento', cursive;
+    font-weight: normal;
+    font-size: clamp(55px, 11vw, 95px);
+    margin: 10px 0 12px;
+    line-height: 1.1;
     color: #9c3f7c;
 }
 
@@ -112,6 +112,20 @@ h1 {
     border-radius: 28px;
     background: linear-gradient(135deg, #ffb8da, #c9b9ff, #ffe2bc);
     box-shadow: 0 14px 35px #a56d9a30;
+    animation: photoPulse 4s infinite ease-in-out;
+}
+
+@keyframes photoPulse {
+    0% {
+        box-shadow: 0 14px 35px rgba(165, 109, 154, 0.2);
+    }
+    50% {
+        box-shadow: 0 14px 45px rgba(255, 184, 218, 0.7);
+        transform: scale(1.02);
+    }
+    100% {
+        box-shadow: 0 14px 35px rgba(165, 109, 154, 0.2);
+    }
 }
 
 .portrait, .cake-portrait {
@@ -155,11 +169,11 @@ h1 {
 }
 
 h2 {
-    font-family: 'Quicksand', sans-serif;
-    font-weight: 700;
-    font-size: clamp(26px, 5vw, 36px);
+    font-family: 'Sacramento', cursive;
+    font-weight: normal;
+    font-size: clamp(38px, 8vw, 60px);
     color: #9c3f7c;
-    line-height: 1.3;
+    line-height: 1.2;
     margin: 10px 0;
 }
 
