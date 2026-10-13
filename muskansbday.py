@@ -5,7 +5,7 @@ import base64
 from datetime import datetime
 
 st.set_page_config(
-    page_title="For Muskan 💗",
+    page_title="A Special Surprise 💗",
     page_icon="🎁",
     layout="wide",
     initial_sidebar_state="collapsed"
@@ -250,7 +250,7 @@ button:hover { transform: translateY(-3px) scale(1.02); }
     margin-top: 4px;
 }
 
-#lock-card, #open-card, #surprise {
+#lock-card, #open-card, #surprise, #top-decor {
     display: none;
 }
 
@@ -303,26 +303,27 @@ button:hover { transform: translateY(-3px) scale(1.02); }
 <body>
 <div class="page">
 
-    <div class="decor">✧ 21 ✧</div>
-    <div class="pill">ENTERING A FABULOUS NEW CHAPTER</div>
+    <!-- TOP DECOR (Revealed after opening) -->
+    <div class="decor" id="top-decor">✧ 21 ✧</div>
+    <div class="pill" id="top-pill">A SPECIAL MOMENT</div>
 
-    <h1>Happy 21st, Muskan! 💗</h1>
-    <p class="subtitle">
-        Stepping into 21 with grace, beauty, and magic. ✨<br>
-        Here is a little corner of the internet made just to celebrate YOU. 🌷
+    <!-- DYNAMIC HEADER -->
+    <h1 id="main-title">Counting Down... ✨</h1>
+    <p class="subtitle" id="main-subtitle">
+        Something wonderful and exciting is on its way. Stay tuned! 🌷
     </p>
 
     <!-- HIDDEN PHOTO WRAP (Revealed only when surprise opens) -->
-    <div class="photo-wrap" id="photo-container" style="display: none;">
+    <div class="photo-wrap" id="photo-container">
         PHOTO_SECTION
     </div>
 
     <!-- 1. LOCKED COUNTDOWN CARD (Shown before 12 AM) -->
     <div class="card" id="lock-card">
-        <div style="font-size:48px">🔒 ✨</div>
-        <h2>Waiting for 12:00 AM Midnight...</h2>
+        <div style="font-size:48px">⏳</div>
+        <h2>Waiting for Midnight...</h2>
         <p class="message">
-            Shhh! Your 21st birthday surprise is safely locked inside.<br>
+            Shhh! A special surprise is locked inside.<br>
             The countdown is on. Come back when the clock strikes 12! 🌙
         </p>
         
@@ -349,10 +350,10 @@ button:hover { transform: translateY(-3px) scale(1.02); }
     <!-- 2. OPEN SURPRISE CARD (Shown after 12 AM before clicking) -->
     <div class="card" id="open-card">
         <div style="font-size:48px">🎁</div>
-        <h2>It's Time! Ready for your 21st surprise?</h2>
+        <h2>The time has arrived!</h2>
         <p class="message">
-            The clock has struck midnight! Your special milestone moment is waiting.<br>
-            Let's make this birthday unforgettable! 💌
+            The clock has struck midnight! Your special surprise is finally ready.<br>
+            Click below to open it up! 💌
         </p>
         <button onclick="openSurprise()">Open Your Surprise ✨</button>
     </div>
@@ -436,10 +437,18 @@ function confettiBurst() {
 }
 
 function openSurprise() {
-    // Hide the open button card, reveal photo and full surprise content!
+    // Hide the open button card
     document.getElementById("open-card").style.display = "none";
+    
+    // REVEAL ALL 21ST BIRTHDAY DETAILS & PHOTO
+    document.getElementById("top-decor").style.display = "block";
+    document.getElementById("top-pill").textContent = "ENTERING A FABULOUS NEW CHAPTER";
+    document.getElementById("main-title").textContent = "Happy 21st, Muskan! 💗";
+    document.getElementById("main-subtitle").innerHTML = "Stepping into 21 with grace, beauty, and magic. ✨<br>Here is a little corner of the internet made just to celebrate YOU. 🌷";
+    
     document.getElementById("photo-container").style.display = "block";
     document.getElementById("surprise").style.display = "block";
+    
     confettiBurst();
     window.scrollTo({ top: 0, behavior: "smooth" });
 }
